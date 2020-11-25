@@ -1,0 +1,9 @@
+# dotnet
+bin/
+obj/
+appsettings*
+!appsettings.json
+
+# general
+.DS_Store
+.vscode/
