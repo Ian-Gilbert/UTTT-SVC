@@ -46,6 +46,7 @@ namespace UTTT.Service.WebApi.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] int player, [FromBody] int lb_index, [FromBody] int move)
         {
