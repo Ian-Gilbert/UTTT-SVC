@@ -4,20 +4,42 @@ namespace UTTT.Service.ObjectModel.Models
 {
     public class GlobalBoard : ATicTacToeBoard
     {
-        private LocalBoard[,] _localboards = new LocalBoard[3, 3];
-        public LocalBoard[,] LocalBoards { get => _localboards; set => _localboards = value; }
+        private LocalBoard[] _localboards = new LocalBoard[9];
+        public LocalBoard[] LocalBoards { get => _localboards; set => _localboards = value; }
 
-        public void MarkGlobalBoard(int player, int index)
+        public bool IsValidMove(int player, int lb_index, int move)
         {
-            int row = index / 3;
-            int col = index % 3;
+            LocalBoard lb = LocalBoards[lb_index];
 
-            Board[row, col] = player;
+            if (lb.Focus && lb.Board[move] == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public void UpdateFocus(int move_row, int move_col)
+        public void MakeMove(int player, int lb_index, int move)
         {
-            LocalBoard nextLb = LocalBoards[move_row, move_col];
+            LocalBoard lb = LocalBoards[lb_index];
+
+            lb.MarkBoard(player, move);
+
+            if (lb.HasTicTacToe(player))
+            {
+                lb.Playable = false;
+                MarkBoard(player, lb_index);
+            }
+            else if (lb.IsFull())
+            {
+                lb.Playable = false;
+                MarkBoard(-1, lb_index);
+            }
+        }
+
+        public void UpdateFocus(int move)
+        {
+            LocalBoard nextLb = LocalBoards[move];
 
             // if nextLb is playable, set focus to true and all others to false
             if (nextLb.Playable)
