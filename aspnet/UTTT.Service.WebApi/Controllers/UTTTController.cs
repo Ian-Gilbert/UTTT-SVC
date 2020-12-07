@@ -5,8 +5,11 @@ using UTTT.Service.ObjectModel.Models;
 
 namespace UTTT.Service.WebApi.Controllers
 {
+    /// <summary>
+    /// Controls the main game funtionality
+    /// </summary>
     [ApiController]
-    [Route("rest/uttt")]
+    [Route("rest/[controller]")]
     public class UTTTController : ControllerBase
     {
         /// <summary>
