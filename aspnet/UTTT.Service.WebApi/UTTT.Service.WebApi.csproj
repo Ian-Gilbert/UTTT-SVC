@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UTTT.Service.ObjectModel\UTTT.Service.ObjectModel.csproj" />
+    <ProjectReference Include="..\UTTT.Service.DataContext\UTTT.Service.DataContext.csproj" />
   </ItemGroup>
 
 </Project>

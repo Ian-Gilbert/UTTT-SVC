@@ -19,4 +19,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UTTT.Service.WebApi\UTTT.Service.WebApi.csproj" />
+    <ProjectReference Include="..\UTTT.Service.ObjectModel\UTTT.Service.ObjectModel.csproj" />
+    <ProjectReference Include="..\UTTT.Service.DataContext\UTTT.Service.DataContext.csproj" />
+  </ItemGroup>
+
 </Project>
