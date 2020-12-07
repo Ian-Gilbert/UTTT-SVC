@@ -13,7 +13,7 @@ namespace UTTT.Service.WebApi.Controllers
     public class UTTTController : ControllerBase
     {
         /// <summary>
-        /// Get a game by it's ID number
+        /// Get a game by its ID number
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -37,7 +37,7 @@ namespace UTTT.Service.WebApi.Controllers
         }
 
         /// <summary>
-        /// Make a move
+        /// Make a move on a game by its ID number
         /// </summary>
         /// <param name="id"></param>
         /// <param name="player"></param>
@@ -53,7 +53,7 @@ namespace UTTT.Service.WebApi.Controllers
         }
 
         /// <summary>
-        /// Delete a game
+        /// Delete a game by its ID number
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
