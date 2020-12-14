@@ -1,8 +1,13 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace UTTT.Service.ObjectModel.Models
 {
     public class GameObject
     {
-        public int Id { get; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; }
         public GlobalBoard Board { get; }
         // public Player XPlayer { get; set; }
         // public Player OPlayer { get; set; }

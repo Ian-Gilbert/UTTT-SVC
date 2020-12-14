@@ -10,7 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using UTTT.Service.ObjectModel.Interfaces;
+using UTTT.Service.ObjectModel.Models;
 
 namespace UTTT.Service.WebApi
 {
@@ -26,6 +29,13 @@ namespace UTTT.Service.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<UTTTDatabaseSettings>(
+                Configuration.GetSection(nameof(UTTTDatabaseSettings))
+            );
+
+            services.AddSingleton<IUTTTDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<UTTTDatabaseSettings>>().Value
+            );
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
