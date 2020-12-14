@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\UtttApi.WebApi\UtttApi.WebApi.csproj" />
     <ProjectReference Include="..\UtttApi.ObjectModel\UtttApi.ObjectModel.csproj" />
-    <ProjectReference Include="..\UtttApi.DataContext\UtttApi.DataContext.csproj" />
+    <ProjectReference Include="..\UtttApi.DataService\UtttApi.DataService.csproj" />
   </ItemGroup>
 
 </Project>

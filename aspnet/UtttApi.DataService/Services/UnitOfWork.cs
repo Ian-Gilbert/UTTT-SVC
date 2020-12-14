@@ -1,7 +1,7 @@
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 
-namespace UtttApi.DataContext.Services
+namespace UtttApi.DataService.Services
 {
     public class UnitOfWork : IUnitOfWork
     {

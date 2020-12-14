@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtttApi.WebApi", "UtttApi.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtttApi.ObjectModel", "UtttApi.ObjectModel\UtttApi.ObjectModel.csproj", "{748AE925-4C19-4E51-9D57-7A61A480C812}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtttApi.DataContext", "UtttApi.DataContext\UtttApi.DataContext.csproj", "{2C280E8B-9F81-4C67-A71F-1AF2058BE894}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtttApi.DataService", "UtttApi.DataService\UtttApi.DataService.csproj", "{2C280E8B-9F81-4C67-A71F-1AF2058BE894}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
