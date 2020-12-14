@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using UtttApi.DataContext.Serices;
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 
@@ -36,6 +37,8 @@ namespace UtttApi.WebApi
             services.AddSingleton<IUtttDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<UtttDatabaseSettings>>().Value
             );
+
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
