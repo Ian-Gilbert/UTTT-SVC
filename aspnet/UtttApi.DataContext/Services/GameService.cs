@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 
-namespace UtttApi.DataContext.Serices
+namespace UtttApi.DataContext.Services
 {
     public class GameService : IService<GameObject>
     {

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using UtttApi.DataContext.Serices;
+using UtttApi.DataContext.Services;
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 
