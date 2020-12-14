@@ -1,13 +1,9 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using UtttApi.ObjectModel.Abstracts;
 
 namespace UtttApi.ObjectModel.Models
 {
-    public class GameObject
+    public class GameObject : AEntity
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; }
         public GlobalBoard Board { get; }
         // public Player XPlayer { get; set; }
         // public Player OPlayer { get; set; }
