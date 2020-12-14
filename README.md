@@ -1,6 +1,6 @@
 # Ultimate Tic Tic Toe
 
-This is a Rest API for the game of Ultimate Tic Tac Toe, taking over from my [older python version of the game](https://github.com/Ian-Gilbert/Ultimate-Tic-Tac-Toe).
+This is a Rest API for the game of Ultimate Tic Tac Toe, with both two-player and human vs bot capabilities. For the corresponding Angular client, see my repo [here](https://github.com/Ian-Gilbert/uttt-angular).
 
 ## How To Play
 On the surface, ultimate tic tac toe is the same as the standard game: there are nine squares arranged in a 3x3 grid which can each be marked as either an 'X' or an 'O', and three in a row wins the game. Unlike the original game, however, you cannot simply mark a square as 'X' or 'O'. Instead, each square consists of an additional tic tac toe game, which must be won in order to mark the big square. The overall board is called the 'global board', and the smaller boards are called 'local boards'. The game is won when a player wins three local boards in a row.
