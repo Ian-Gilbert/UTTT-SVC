@@ -19,7 +19,7 @@ namespace UtttApi.ObjectModel.Models
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
-            if (lb.Focus && lb.Board[move.SquareIndex] == 0)
+            if (lb.Focus && lb.Board[move.MarkIndex] == 0)
             {
                 return true;
             }
@@ -59,18 +59,18 @@ namespace UtttApi.ObjectModel.Models
             if (lb.HasTicTacToe(move.Player))
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Player = move.Player, SquareIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Player = move.Player, MarkIndex = move.LbIndex });
             }
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, SquareIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, MarkIndex = move.LbIndex });
             }
         }
 
         public void UpdateFocus(MoveObject move)
         {
-            LocalBoard nextLb = LocalBoards[move.SquareIndex];
+            LocalBoard nextLb = LocalBoards[move.MarkIndex];
 
             // if nextLb is playable, set focus to true and all others to false
             if (nextLb.Playable)

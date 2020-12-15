@@ -84,7 +84,7 @@ namespace UtttApi.WebApi.Controllers
                 return BadRequest($"It is not player {move.Player}'s turn.");
             }
 
-            return BadRequest($"The move ({move.LbIndex}, {move.SquareIndex}) is not valid for player {move.Player}.");
+            return BadRequest($"The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player}.");
         }
 
         /// <summary>

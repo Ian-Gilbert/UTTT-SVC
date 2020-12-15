@@ -65,7 +65,7 @@ namespace UtttApi.ObjectModel.Abstracts
 
         public void MarkBoard(MoveObject move)
         {
-            Board[move.SquareIndex] = move.Player;
+            Board[move.MarkIndex] = move.Player;
         }
     }
 }
