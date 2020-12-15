@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using UtttApi.ObjectModel.Interfaces;
 
@@ -25,8 +26,15 @@ namespace UtttApi.ObjectModel.Abstracts
             return document;
         }
 
-        public virtual async Task<TEntity> SelectAsync(string id) =>
-            await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
+        public virtual async Task<TEntity> SelectAsync(string id)
+        {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
+            return await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
+        }
 
         public virtual async Task<IEnumerable<TEntity>> SelectAsync() =>
             await _collection.Find<TEntity>(d => true).ToListAsync();

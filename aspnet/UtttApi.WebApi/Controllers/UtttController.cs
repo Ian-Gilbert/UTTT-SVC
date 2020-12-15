@@ -33,7 +33,7 @@ namespace UtttApi.WebApi.Controllers
 
             if (game == null)
             {
-                return NotFound($"The game with id {id} does not exist.");
+                return NotFound($"Could not find the game with id {id}");
             }
 
             return Ok(await _unitOfWork.Game.SelectAsync(id));
@@ -68,7 +68,7 @@ namespace UtttApi.WebApi.Controllers
 
             if (game == null)
             {
-                return NotFound($"The game with id {id} does not exist.");
+                return NotFound($"Could not find the game with id {id}");
             }
 
             if (game.IsValidMove(move))
