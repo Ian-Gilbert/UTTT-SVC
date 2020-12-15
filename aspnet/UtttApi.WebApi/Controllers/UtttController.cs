@@ -71,6 +71,11 @@ namespace UtttApi.WebApi.Controllers
                 return NotFound($"Could not find the game with id {id}");
             }
 
+            if (game.Status != GameStatus.IN_PROGRESS)
+            {
+                return BadRequest($"Game {id}: The game is finished");
+            }
+
             if (game.IsValidMove(move))
             {
                 if (game.CheckPlayerMove(move))
@@ -81,10 +86,10 @@ namespace UtttApi.WebApi.Controllers
                     return Accepted(game);
                 }
 
-                return BadRequest($"It is not player {move.Player}'s turn.");
+                return BadRequest($"Game {id}: It is not player {move.Player.ToString()}'s turn");
             }
 
-            return BadRequest($"The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player}.");
+            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player.ToString()}");
         }
 
         /// <summary>
@@ -93,12 +98,12 @@ namespace UtttApi.WebApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(string id)
         {
             await _unitOfWork.Game.DeleteAsync(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
