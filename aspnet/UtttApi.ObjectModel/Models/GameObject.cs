@@ -21,6 +21,11 @@ namespace UtttApi.ObjectModel.Models
             return Board.IsValidMove(move);
         }
 
+        public bool CheckPlayerMove(MoveObject move)
+        {
+            return Board.CheckPlayerMove(move);
+        }
+
         public void UpdateGameStatus()
         {
             if (Board.HasTicTacToe(PlayerShape.X))

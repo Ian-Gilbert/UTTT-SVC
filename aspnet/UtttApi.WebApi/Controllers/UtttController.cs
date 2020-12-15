@@ -73,10 +73,15 @@ namespace UtttApi.WebApi.Controllers
 
             if (game.IsValidMove(move))
             {
-                game.MakeMove(move);
-                game.UpdateGameStatus();
-                await _unitOfWork.Game.UpdateAsync(game);
-                return Accepted(game);
+                if (game.CheckPlayerMove(move))
+                {
+                    game.MakeMove(move);
+                    game.UpdateGameStatus();
+                    await _unitOfWork.Game.UpdateAsync(game);
+                    return Accepted(game);
+                }
+
+                return BadRequest($"It is not player {move.Player}'s turn.");
             }
 
             return BadRequest($"The move ({move.LbIndex}, {move.SquareIndex}) is not valid for player {move.Player}.");
