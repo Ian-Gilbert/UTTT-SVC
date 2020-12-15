@@ -54,7 +54,7 @@ namespace UtttApi.ObjectModel.Abstracts
         {
             for (int i = 0; i < 9; i++)
             {
-                if (Board[i] == 0)
+                if (Board[i] == PlayerShape.EMPTY)
                 {
                     return false;
                 }

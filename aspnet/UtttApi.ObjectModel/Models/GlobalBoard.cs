@@ -19,7 +19,7 @@ namespace UtttApi.ObjectModel.Models
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
-            if (lb.Focus && lb.Board[move.MarkIndex] == 0)
+            if (lb.Focus && lb.Board[move.MarkIndex] == PlayerShape.EMPTY)
             {
                 return true;
             }
