@@ -85,11 +85,10 @@ namespace UtttApi.WebApi.Controllers
                     await _unitOfWork.Game.UpdateAsync(game);
                     return Accepted(game);
                 }
-
-                return BadRequest($"Game {id}: It is not player {move.Player.ToString()}'s turn");
+                return BadRequest($"Game {id}: It is not player {move.Player.ToString("d")}'s turn");
             }
 
-            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player.ToString()}");
+            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player.ToString("d")}");
         }
 
         /// <summary>
@@ -102,8 +101,12 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(string id)
         {
-            await _unitOfWork.Game.DeleteAsync(id);
-            return NoContent();
+            if (await _unitOfWork.Game.DeleteAsync(id))
+            {
+                return NoContent();
+            }
+
+            return NotFound($"Could not find the game with id {id}");
         }
     }
 }

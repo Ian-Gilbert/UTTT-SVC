@@ -17,8 +17,16 @@ namespace UtttApi.ObjectModel.Abstracts
             _collection = database.GetCollection<TEntity>(CollectionName);
         }
 
-        public virtual async Task DeleteAsync(string id) =>
-            await _collection.DeleteOneAsync(d => d.Id == id);
+        public virtual async Task<bool> DeleteAsync(string id)
+        {
+            long count = 0;
+            if (ObjectId.TryParse(id, out _))
+            {
+                DeleteResult deleteResult = await _collection.DeleteOneAsync(d => d.Id == id);
+                count = deleteResult.DeletedCount;
+            }
+            return count == 1;
+        }
 
         public virtual async Task<TEntity> InsertAsync(TEntity document)
         {

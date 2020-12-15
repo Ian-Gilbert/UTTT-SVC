@@ -5,7 +5,7 @@ namespace UtttApi.ObjectModel.Interfaces
 {
     public interface IService<TEntity> where TEntity : class
     {
-        Task DeleteAsync(string id);
+        Task<bool> DeleteAsync(string id);
         Task<TEntity> InsertAsync(TEntity document);
         Task<TEntity> SelectAsync(string id);
         Task<IEnumerable<TEntity>> SelectAsync();
