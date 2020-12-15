@@ -4,29 +4,30 @@ namespace UtttApi.ObjectModel.Models
 {
     public class GameObject : AEntity
     {
-        public GlobalBoard Board { get; }
+        private GlobalBoard _board = new GlobalBoard();
+        public GlobalBoard Board { get => _board; set => _board = value; }
         // public Player XPlayer { get; set; }
         // public Player OPlayer { get; set; }
         public GameStatus Status { get; set; }
 
-        public void MakeMove(int player, int lb_index, int move)
+        public void MakeMove(MoveObject move)
         {
-            Board.MakeMove(player, lb_index, move);
+            Board.MakeMove(move);
             Board.UpdateFocus(move);
         }
 
-        public bool IsValidMove(int player, int lb_index, int move)
+        public bool IsValidMove(MoveObject move)
         {
-            return Board.IsValidMove(player, lb_index, move);
+            return Board.IsValidMove(move);
         }
 
         public void UpdateGameStatus()
         {
-            if (Board.HasTicTacToe(1))
+            if (Board.HasTicTacToe(PlayerShape.X))
             {
                 Status = GameStatus.X_WINS;
             }
-            else if (Board.HasTicTacToe(2))
+            else if (Board.HasTicTacToe(PlayerShape.O))
             {
                 Status = GameStatus.O_WINS;
             }

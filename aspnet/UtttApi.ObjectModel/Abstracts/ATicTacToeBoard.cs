@@ -1,13 +1,22 @@
 using UtttApi.ObjectModel.Interfaces;
+using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.ObjectModel.Abstracts
 {
     public abstract class ATicTacToeBoard : ITicTacToeBoard
     {
-        private int[] _board = new int[9];
-        public int[] Board { get => _board; set => _board = value; }
+        private PlayerShape[] _board = new PlayerShape[9];
+        public PlayerShape[] Board { get => _board; set => _board = value; }
 
-        public bool HasTicTacToe(int player)
+        public ATicTacToeBoard()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                _board[i] = PlayerShape.EMPTY;
+            }
+        }
+
+        public bool HasTicTacToe(PlayerShape player)
         {
             // Check for horizontal and vertical tic tac toe
             for (int i = 0; i < 3; i++)
@@ -54,9 +63,9 @@ namespace UtttApi.ObjectModel.Abstracts
             return true;
         }
 
-        public void MarkBoard(int player, int move)
+        public void MarkBoard(MoveObject move)
         {
-            Board[move] = player;
+            Board[move.SquareIndex] = move.Player;
         }
     }
 }

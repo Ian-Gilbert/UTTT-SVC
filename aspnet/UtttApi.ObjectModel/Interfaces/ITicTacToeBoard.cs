@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.ObjectModel.Interfaces
 {
     public interface ITicTacToeBoard
     {
-        int[] Board { get; set; }
+        PlayerShape[] Board { get; set; }
 
-        void MarkBoard(int player, int move);
+        void MarkBoard(MoveObject move);
 
-        bool HasTicTacToe(int player);
+        bool HasTicTacToe(PlayerShape player);
 
         bool IsFull();
     }

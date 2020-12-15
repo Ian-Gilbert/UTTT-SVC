@@ -4,14 +4,22 @@ namespace UtttApi.ObjectModel.Models
 {
     public class GlobalBoard : ATicTacToeBoard
     {
-        private LocalBoard[] _localboards = new LocalBoard[9];
-        public LocalBoard[] LocalBoards { get => _localboards; set => _localboards = value; }
+        private LocalBoard[] _localBoards = new LocalBoard[9];
+        public LocalBoard[] LocalBoards { get => _localBoards; set => _localBoards = value; }
 
-        public bool IsValidMove(int player, int lb_index, int move)
+        public GlobalBoard() : base()
         {
-            LocalBoard lb = LocalBoards[lb_index];
+            for (int i = 0; i < 9; i++)
+            {
+                _localBoards[i] = new LocalBoard();
+            }
+        }
 
-            if (lb.Focus && lb.Board[move] == 0)
+        public bool IsValidMove(MoveObject move)
+        {
+            LocalBoard lb = LocalBoards[move.LbIndex];
+
+            if (lb.Focus && lb.Board[move.SquareIndex] == 0)
             {
                 return true;
             }
@@ -19,27 +27,27 @@ namespace UtttApi.ObjectModel.Models
             return false;
         }
 
-        public void MakeMove(int player, int lb_index, int move)
+        public void MakeMove(MoveObject move)
         {
-            LocalBoard lb = LocalBoards[lb_index];
+            LocalBoard lb = LocalBoards[move.LbIndex];
 
-            lb.MarkBoard(player, move);
+            lb.MarkBoard(move);
 
-            if (lb.HasTicTacToe(player))
+            if (lb.HasTicTacToe(move.Player))
             {
                 lb.Playable = false;
-                MarkBoard(player, lb_index);
+                MarkBoard(move);
             }
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(-1, lb_index);
+                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, LbIndex = move.LbIndex });
             }
         }
 
-        public void UpdateFocus(int move)
+        public void UpdateFocus(MoveObject move)
         {
-            LocalBoard nextLb = LocalBoards[move];
+            LocalBoard nextLb = LocalBoards[move.SquareIndex];
 
             // if nextLb is playable, set focus to true and all others to false
             if (nextLb.Playable)

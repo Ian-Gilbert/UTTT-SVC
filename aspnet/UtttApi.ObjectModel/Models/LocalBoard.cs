@@ -11,5 +11,11 @@ namespace UtttApi.ObjectModel.Models
 
         // a board becomes unplayable if the state is determined (win/lose/full)
         public bool Playable { get; set; }
+
+        public LocalBoard() : base()
+        {
+            Focus = true;
+            Playable = true;
+        }
     }
 }

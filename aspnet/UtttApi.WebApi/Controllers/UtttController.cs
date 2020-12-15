@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.WebApi.Controllers
@@ -12,6 +13,12 @@ namespace UtttApi.WebApi.Controllers
     [Route("rest/[controller]")]
     public class UtttController : ControllerBase
     {
+        private readonly IUnitOfWork _unitOfWork;
+        public UtttController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         /// <summary>
         /// Get a game by its ID number
         /// </summary>
@@ -20,9 +27,16 @@ namespace UtttApi.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAsync(int id)
+        public async Task<IActionResult> GetAsync(string id)
         {
-            return Ok(new GameObject());
+            GameObject game = await _unitOfWork.Game.SelectAsync(id);
+
+            if (game == null)
+            {
+                return NotFound($"The game with id {id} does not exist.");
+            }
+
+            return Ok(await _unitOfWork.Game.SelectAsync(id));
         }
 
         /// <summary>
@@ -33,7 +47,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         public async Task<IActionResult> PostAsync()
         {
-            return Accepted(new GameObject());
+            return Accepted(await _unitOfWork.Game.InsertAsync(new GameObject()));
         }
 
         /// <summary>
@@ -48,9 +62,24 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] int player, [FromBody] int lb_index, [FromBody] int move)
+        public async Task<IActionResult> PutAsync(string id, [FromBody] MoveObject move)
         {
-            return Accepted(new GameObject());
+            GameObject game = await _unitOfWork.Game.SelectAsync(id);
+
+            if (game == null)
+            {
+                return NotFound($"The game with id {id} does not exist.");
+            }
+
+            if (game.IsValidMove(move))
+            {
+                game.MakeMove(move);
+                game.UpdateGameStatus();
+                await _unitOfWork.Game.UpdateAsync(game);
+                return Accepted(game);
+            }
+
+            return BadRequest($"The move ({move.LbIndex}, {move.SquareIndex}) is not valid for player {move.Player}.");
         }
 
         /// <summary>
@@ -61,8 +90,9 @@ namespace UtttApi.WebApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
+            await _unitOfWork.Game.DeleteAsync(id);
             return Ok();
         }
     }
