@@ -59,12 +59,12 @@ namespace UtttApi.ObjectModel.Models
             if (lb.HasTicTacToe(move.Player))
             {
                 lb.Playable = false;
-                MarkBoard(move);
+                MarkBoard(new MoveObject { Player = move.Player, SquareIndex = move.LbIndex });
             }
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, LbIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, SquareIndex = move.LbIndex });
             }
         }
 
