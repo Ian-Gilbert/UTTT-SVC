@@ -16,15 +16,9 @@ namespace UtttApi.ObjectModel.Models
             Board.UpdateFocus(move);
         }
 
-        public bool IsValidMove(MoveObject move)
-        {
-            return Board.IsValidMove(move);
-        }
+        public bool IsValidMove(MoveObject move) => Board.IsValidMove(move);
 
-        public bool CheckPlayerMove(MoveObject move)
-        {
-            return Board.CheckPlayerMove(move);
-        }
+        public bool CheckPlayerMove(MoveObject move) => Board.CheckPlayerMove(move);
 
         public void UpdateGameStatus()
         {
