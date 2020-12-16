@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using UtttApi.ObjectModel.Abstracts;
 
 namespace UtttApi.ObjectModel.Models
