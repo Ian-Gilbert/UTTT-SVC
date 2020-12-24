@@ -19,7 +19,7 @@ namespace UtttApi.ObjectModel.Models
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
-            if (lb.Focus && lb.Board[move.MarkIndex] == PlayerShape.EMPTY)
+            if (lb.Focus && lb.Board[move.MarkIndex] == MarkShape.EMPTY)
             {
                 return true;
             }
@@ -34,15 +34,15 @@ namespace UtttApi.ObjectModel.Models
 
             foreach (var lb in LocalBoards)
             {
-                xCount += lb.CountPlayer(PlayerShape.X);
-                oCount += lb.CountPlayer(PlayerShape.O);
+                xCount += lb.CountPlayer(MarkShape.X);
+                oCount += lb.CountPlayer(MarkShape.O);
             }
 
-            if (move.Player == PlayerShape.X && xCount == oCount)
+            if (move.Mark == MarkShape.X && xCount == oCount)
             {
                 return true;
             }
-            if (move.Player == PlayerShape.O && xCount == oCount + 1)
+            if (move.Mark == MarkShape.O && xCount == oCount + 1)
             {
                 return true;
             }
@@ -56,15 +56,15 @@ namespace UtttApi.ObjectModel.Models
 
             lb.MarkBoard(move);
 
-            if (lb.HasTicTacToe(move.Player))
+            if (lb.HasTicTacToe(move.Mark))
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Player = move.Player, MarkIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Mark = move.Mark, MarkIndex = move.LbIndex });
             }
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Player = PlayerShape.DRAW, MarkIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Mark = MarkShape.DRAW, MarkIndex = move.LbIndex });
             }
         }
 

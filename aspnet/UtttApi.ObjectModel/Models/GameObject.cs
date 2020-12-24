@@ -42,11 +42,11 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         public void UpdateGameStatus()
         {
-            if (Board.HasTicTacToe(PlayerShape.X))
+            if (Board.HasTicTacToe(MarkShape.X))
             {
                 Status = GameStatus.X_WINS;
             }
-            else if (Board.HasTicTacToe(PlayerShape.O))
+            else if (Board.HasTicTacToe(MarkShape.O))
             {
                 Status = GameStatus.O_WINS;
             }

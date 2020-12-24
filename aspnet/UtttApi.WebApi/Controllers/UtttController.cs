@@ -63,9 +63,14 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutAsync(string id, [Required, Range(1, 2)] PlayerShape player, [Required, Range(0, 8)] int lbIndex, [Required, Range(0, 8)] int markIndex)
+        public async Task<IActionResult> PutAsync(
+            string id,
+            [Required, Range(1, 2)] MarkShape player,
+            [Required, Range(0, 8)] int lbIndex,
+            [Required, Range(0, 8)] int markIndex
+        )
         {
-            MoveObject move = new MoveObject() { Player = player, LbIndex = lbIndex, MarkIndex = markIndex };
+            MoveObject move = new MoveObject() { Mark = player, LbIndex = lbIndex, MarkIndex = markIndex };
 
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 
@@ -88,10 +93,10 @@ namespace UtttApi.WebApi.Controllers
                     await _unitOfWork.Game.UpdateAsync(game);
                     return Accepted(game);
                 }
-                return BadRequest($"Game {id}: It is not player {move.Player.ToString("d")}'s turn");
+                return BadRequest($"Game {id}: It is not player {move.Mark}'s turn");
             }
 
-            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Player.ToString("d")}");
+            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark}");
         }
 
         /// <summary>
