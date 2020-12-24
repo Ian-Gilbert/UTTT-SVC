@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,15 +56,17 @@ namespace UtttApi.WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="player"></param>
-        /// <param name="lb_index"></param>
-        /// <param name="move"></param>
+        /// <param name="lbIndex"></param>
+        /// <param name="markIndex"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutAsync(string id, [FromBody] MoveObject move)
+        public async Task<IActionResult> PutAsync(string id, [Required, Range(1, 2)] PlayerShape player, [Required, Range(0, 8)] int lbIndex, [Required, Range(0, 8)] int markIndex)
         {
+            MoveObject move = new MoveObject() { Player = player, LbIndex = lbIndex, MarkIndex = markIndex };
+
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 
             if (game == null)
