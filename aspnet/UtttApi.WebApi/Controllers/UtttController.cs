@@ -11,7 +11,7 @@ namespace UtttApi.WebApi.Controllers
     /// Controls the main game funtionality
     /// </summary>
     [ApiController]
-    [Route("rest/[controller]")]
+    [Route("rest/uttt/[controller]")]
     public class UtttController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
