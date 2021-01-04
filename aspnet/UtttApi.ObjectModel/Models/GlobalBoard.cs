@@ -27,29 +27,6 @@ namespace UtttApi.ObjectModel.Models
             return false;
         }
 
-        public bool CheckPlayerMove(MoveObject move)
-        {
-            int xCount = 0;
-            int oCount = 0;
-
-            foreach (var lb in LocalBoards)
-            {
-                xCount += lb.CountPlayer(MarkShape.X);
-                oCount += lb.CountPlayer(MarkShape.O);
-            }
-
-            if (move.Mark == MarkShape.X && xCount == oCount)
-            {
-                return true;
-            }
-            if (move.Mark == MarkShape.O && xCount == oCount + 1)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public void MakeMove(MoveObject move)
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
