@@ -22,7 +22,7 @@ namespace UtttApi.ObjectModel.Interfaces
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        Task<TEntity> InsertAsync(TEntity document);
+        Task<string> InsertAsync(TEntity document);
 
         /// <summary>
         /// Select a document by id

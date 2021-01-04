@@ -41,14 +41,15 @@ namespace UtttApi.WebApi.Controllers
         }
 
         /// <summary>
-        /// Create a new game
+        /// Create a new game and return the new Id
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         public async Task<IActionResult> PostAsync()
         {
-            return Accepted(await _unitOfWork.Game.InsertAsync(new GameObject()));
+            var id = await _unitOfWork.Game.InsertAsync(new GameObject());
+            return Created($"/rest/uttt/uttt/{id}", id);
         }
 
         /// <summary>
