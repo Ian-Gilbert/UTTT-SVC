@@ -64,15 +64,8 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutAsync(
-            string id,
-            [Required, Range(1, 2)] MarkShape player,
-            [Required, Range(0, 8)] int lbIndex,
-            [Required, Range(0, 8)] int markIndex
-        )
+        public async Task<IActionResult> PutAsync(string id, MoveObject move)
         {
-            MoveObject move = new MoveObject() { Mark = player, LbIndex = lbIndex, MarkIndex = markIndex };
-
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 
             if (game == null)
