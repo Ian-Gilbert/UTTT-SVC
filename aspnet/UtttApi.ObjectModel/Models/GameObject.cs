@@ -12,6 +12,12 @@ namespace UtttApi.ObjectModel.Models
         // public Player XPlayer { get; set; }
         // public Player OPlayer { get; set; }
         public GameStatus Status { get; set; }
+        public MarkShape CurrentPlayer { get; set; }
+
+        public GameObject()
+        {
+            CurrentPlayer = MarkShape.X;
+        }
 
         /// <summary>
         /// Make a move and mark boards/update focus and playablity accordingly
@@ -35,7 +41,17 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        public bool CheckPlayerMove(MoveObject move) => Board.CheckPlayerMove(move);
+        public void UpdateCurrentPlayer()
+        {
+            if (CurrentPlayer == MarkShape.X)
+            {
+                CurrentPlayer = MarkShape.O;
+            }
+            else
+            {
+                CurrentPlayer = MarkShape.X;
+            }
+        }
 
         /// <summary>
         /// Check if the game has ended, and update status accordingly

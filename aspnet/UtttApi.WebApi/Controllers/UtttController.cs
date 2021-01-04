@@ -87,17 +87,17 @@ namespace UtttApi.WebApi.Controllers
 
             if (game.IsValidMove(move))
             {
-                if (game.CheckPlayerMove(move))
+                if (game.CurrentPlayer == move.Mark)
                 {
                     game.MakeMove(move);
                     game.UpdateGameStatus();
                     await _unitOfWork.Game.UpdateAsync(game);
                     return Accepted(game);
                 }
-                return BadRequest($"Game {id}: It is not player {move.Mark}'s turn");
+                return BadRequest($"Game {id}: It is not player {move.Mark.ToString("d")}'s turn");
             }
 
-            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark}");
+            return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark.ToString("d")}");
         }
 
         /// <summary>
