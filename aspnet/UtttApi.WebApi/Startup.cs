@@ -40,6 +40,14 @@ namespace UtttApi.WebApi
 
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(options =>
+                {
+                    options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -58,6 +66,8 @@ namespace UtttApi.WebApi
             }
 
             // app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseRouting();
 
