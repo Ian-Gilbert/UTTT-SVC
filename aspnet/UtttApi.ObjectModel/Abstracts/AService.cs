@@ -34,10 +34,10 @@ namespace UtttApi.ObjectModel.Abstracts
             return count == 1;
         }
 
-        public virtual async Task<TEntity> InsertAsync(TEntity document)
+        public virtual async Task<string> InsertAsync(TEntity document)
         {
             await _collection.InsertOneAsync(document);
-            return document;
+            return document.Id;
         }
 
         public virtual async Task<TEntity> SelectAsync(string id)
