@@ -87,7 +87,7 @@ namespace UtttApi.WebApi.Controllers
 
             if (game.IsValidMove(move))
             {
-                if (game.CurrentPlayer == move.Mark)
+                if (move.Mark == game.CurrentPlayer)
                 {
                     game.MakeMove(move);
                     game.UpdateGameStatus();
