@@ -37,11 +37,9 @@ namespace UtttApi.ObjectModel.Models
         public bool IsValidMove(MoveObject move) => Board.IsValidMove(move);
 
         /// <summary>
-        /// Check to make sure it is the player's turn
+        /// Switch the current player after a turn
         /// </summary>
-        /// <param name="move"></param>
-        /// <returns></returns>
-        public void UpdateCurrentPlayer()
+        public void SwitchCurrentPlayer()
         {
             if (CurrentPlayer == MarkShape.X)
             {
@@ -69,6 +67,10 @@ namespace UtttApi.ObjectModel.Models
             else if (Board.IsFull())
             {
                 Status = GameStatus.DRAW;
+            }
+            else
+            {
+                SwitchCurrentPlayer();
             }
         }
     }
