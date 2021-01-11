@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +27,7 @@ namespace UtttApi.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAsync(string id)
+        public async Task<IActionResult> Get(string id)
         {
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 
@@ -46,10 +45,14 @@ namespace UtttApi.WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
-        public async Task<IActionResult> PostAsync()
+        public async Task<IActionResult> Post()
         {
-            var id = await _unitOfWork.Game.InsertAsync(new GameObject());
-            return Created($"/rest/uttt/uttt/{id}", id);
+            var game = await _unitOfWork.Game.InsertAsync(new GameObject());
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = game.Id },
+                game
+            );
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutAsync(string id, MoveObject move)
+        public async Task<IActionResult> Put(string id, MoveObject move)
         {
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 
