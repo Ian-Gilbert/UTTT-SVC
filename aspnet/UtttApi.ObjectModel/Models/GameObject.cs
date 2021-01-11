@@ -26,7 +26,12 @@ namespace UtttApi.ObjectModel.Models
         public void MakeMove(MoveObject move)
         {
             Board.MakeMove(move);
-            Board.UpdateFocus(move);
+            UpdateGameStatus();
+            Board.UpdateFocus(move, Status);
+            if (Status == GameStatus.IN_PROGRESS)
+            {
+                SwitchCurrentPlayer();
+            }
         }
 
         /// <summary>
@@ -39,7 +44,7 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Switch the current player after a turn
         /// </summary>
-        public void SwitchCurrentPlayer()
+        private void SwitchCurrentPlayer()
         {
             if (CurrentPlayer == MarkShape.X)
             {
@@ -54,7 +59,7 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Check if the game has ended, and update status accordingly
         /// </summary>
-        public void UpdateGameStatus()
+        private void UpdateGameStatus()
         {
             if (Board.HasTicTacToe(MarkShape.X))
             {
@@ -67,10 +72,6 @@ namespace UtttApi.ObjectModel.Models
             else if (Board.IsFull())
             {
                 Status = GameStatus.DRAW;
-            }
-            else
-            {
-                SwitchCurrentPlayer();
             }
         }
     }

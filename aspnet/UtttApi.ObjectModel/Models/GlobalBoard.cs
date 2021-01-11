@@ -45,27 +45,38 @@ namespace UtttApi.ObjectModel.Models
             }
         }
 
-        public void UpdateFocus(MoveObject move)
+        public void UpdateFocus(MoveObject move, GameStatus status)
         {
-            LocalBoard nextLb = LocalBoards[move.MarkIndex];
-
-            // if nextLb is playable, set focus to true and all others to false
-            if (nextLb.Playable)
+            if (status == GameStatus.IN_PROGRESS)
             {
-                foreach (LocalBoard lb in LocalBoards)
+                LocalBoard nextLb = LocalBoards[move.MarkIndex];
+
+                // if nextLb is playable, set focus to true and all others to false
+                if (nextLb.Playable)
                 {
-                    lb.Focus = false;
+                    foreach (var lb in LocalBoards)
+                    {
+                        lb.Focus = false;
+                    }
+
+                    nextLb.Focus = true;
                 }
 
-                nextLb.Focus = true;
+                // if nextLb is not playable, all playable boards are in focus and all unplayable boards are not
+                else
+                {
+                    foreach (var lb in LocalBoards)
+                    {
+                        lb.Focus = lb.Playable;
+                    }
+                }
             }
-
-            // if nextLb is not playable, all playble boards are in focus and all unplayable boards are not
             else
             {
-                foreach (LocalBoard lb in LocalBoards)
+                foreach (var lb in LocalBoards)
                 {
-                    lb.Focus = lb.Playable;
+                    lb.Focus = false;
+                    lb.Playable = false;
                 }
             }
         }

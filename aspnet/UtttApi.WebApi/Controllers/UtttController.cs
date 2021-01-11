@@ -87,7 +87,6 @@ namespace UtttApi.WebApi.Controllers
                 if (game.IsValidMove(move))
                 {
                     game.MakeMove(move);
-                    game.UpdateGameStatus();
                     await _unitOfWork.Game.UpdateAsync(game);
                     return Accepted(game);
                 }
