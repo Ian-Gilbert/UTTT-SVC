@@ -16,7 +16,7 @@ namespace UtttApi.ObjectModel.Models
             Playable = true;
         }
 
-        public int CountPlayer(MarkShape player)
+        public int CountPlayer(MarkType player)
         {
             int count = 0;
 

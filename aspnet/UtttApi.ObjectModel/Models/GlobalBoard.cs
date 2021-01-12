@@ -19,7 +19,7 @@ namespace UtttApi.ObjectModel.Models
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
-            if (lb.Focus && lb.Board[move.MarkIndex] == MarkShape.EMPTY)
+            if (lb.Focus && lb.Board[move.MarkIndex] == MarkType.EMPTY)
             {
                 return true;
             }
@@ -41,7 +41,7 @@ namespace UtttApi.ObjectModel.Models
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Mark = MarkShape.DRAW, MarkIndex = move.LbIndex });
+                MarkBoard(new MoveObject { Mark = MarkType.DRAW, MarkIndex = move.LbIndex });
             }
         }
 

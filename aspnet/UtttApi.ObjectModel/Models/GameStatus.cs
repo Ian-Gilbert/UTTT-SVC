@@ -2,6 +2,6 @@ namespace UtttApi.ObjectModel.Models
 {
     public enum GameStatus
     {
-        IN_PROGRESS, X_WINS, O_WINS, DRAW
+        IN_PROGRESS, PLAYER1_WINS, PLAYER2_WINS, DRAW
     }
 }

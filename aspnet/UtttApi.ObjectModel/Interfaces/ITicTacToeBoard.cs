@@ -5,11 +5,11 @@ namespace UtttApi.ObjectModel.Interfaces
 {
     public interface ITicTacToeBoard
     {
-        MarkShape[] Board { get; set; }
+        MarkType[] Board { get; set; }
 
         void MarkBoard(MoveObject move);
 
-        bool HasTicTacToe(MarkShape player);
+        bool HasTicTacToe(MarkType player);
 
         bool IsFull();
     }

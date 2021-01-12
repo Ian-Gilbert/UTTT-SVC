@@ -5,18 +5,18 @@ namespace UtttApi.ObjectModel.Abstracts
 {
     public abstract class ATicTacToeBoard : ITicTacToeBoard
     {
-        private MarkShape[] _board = new MarkShape[9];
-        public MarkShape[] Board { get => _board; set => _board = value; }
+        private MarkType[] _board = new MarkType[9];
+        public MarkType[] Board { get => _board; set => _board = value; }
 
         public ATicTacToeBoard()
         {
             for (int i = 0; i < 9; i++)
             {
-                _board[i] = MarkShape.EMPTY;
+                _board[i] = MarkType.EMPTY;
             }
         }
 
-        public bool HasTicTacToe(MarkShape player)
+        public bool HasTicTacToe(MarkType player)
         {
             // Check for horizontal and vertical tic tac toe
             for (int i = 0; i < 3; i++)
@@ -54,7 +54,7 @@ namespace UtttApi.ObjectModel.Abstracts
         {
             for (int i = 0; i < 9; i++)
             {
-                if (Board[i] == MarkShape.EMPTY)
+                if (Board[i] == MarkType.EMPTY)
                 {
                     return false;
                 }

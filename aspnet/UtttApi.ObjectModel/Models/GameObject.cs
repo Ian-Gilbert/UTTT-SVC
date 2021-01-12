@@ -9,14 +9,14 @@ namespace UtttApi.ObjectModel.Models
     {
         private GlobalBoard _board = new GlobalBoard();
         public GlobalBoard Board { get => _board; set => _board = value; }
-        // public Player XPlayer { get; set; }
+        // public Player PLAYER1Player { get; set; }
         // public Player OPlayer { get; set; }
         public GameStatus Status { get; set; }
-        public MarkShape CurrentPlayer { get; set; }
+        public MarkType CurrentPlayer { get; set; }
 
         public GameObject()
         {
-            CurrentPlayer = MarkShape.X;
+            CurrentPlayer = MarkType.PLAYER1;
         }
 
         /// <summary>
@@ -46,13 +46,13 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         private void SwitchCurrentPlayer()
         {
-            if (CurrentPlayer == MarkShape.X)
+            if (CurrentPlayer == MarkType.PLAYER1)
             {
-                CurrentPlayer = MarkShape.O;
+                CurrentPlayer = MarkType.PLAYER2;
             }
             else
             {
-                CurrentPlayer = MarkShape.X;
+                CurrentPlayer = MarkType.PLAYER1;
             }
         }
 
@@ -61,13 +61,13 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         private void UpdateGameStatus()
         {
-            if (Board.HasTicTacToe(MarkShape.X))
+            if (Board.HasTicTacToe(MarkType.PLAYER1))
             {
-                Status = GameStatus.X_WINS;
+                Status = GameStatus.PLAYER1_WINS;
             }
-            else if (Board.HasTicTacToe(MarkShape.O))
+            else if (Board.HasTicTacToe(MarkType.PLAYER2))
             {
-                Status = GameStatus.O_WINS;
+                Status = GameStatus.PLAYER2_WINS;
             }
             else if (Board.IsFull())
             {

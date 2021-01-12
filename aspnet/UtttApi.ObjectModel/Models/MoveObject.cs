@@ -6,7 +6,7 @@ namespace UtttApi.ObjectModel.Models
     {
         [Required]
         [Range(1, 2)]
-        public MarkShape Mark { get; set; }
+        public MarkType Mark { get; set; }
 
         [Required]
         [Range(0, 8)]
