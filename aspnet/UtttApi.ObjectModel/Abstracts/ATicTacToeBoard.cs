@@ -63,7 +63,7 @@ namespace UtttApi.ObjectModel.Abstracts
             return true;
         }
 
-        public void MarkBoard(MoveObject move)
+        public void MarkBoard(Move move)
         {
             Board[move.MarkIndex] = move.Mark;
         }

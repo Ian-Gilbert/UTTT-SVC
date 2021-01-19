@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UtttApi.ObjectModel.Models
 {
-    public class MoveObject
+    public class Move
     {
         [Required]
         [Range(1, 2)]

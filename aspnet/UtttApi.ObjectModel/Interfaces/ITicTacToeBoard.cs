@@ -7,7 +7,7 @@ namespace UtttApi.ObjectModel.Interfaces
     {
         MarkType[] Board { get; set; }
 
-        void MarkBoard(MoveObject move);
+        void MarkBoard(Move move);
 
         bool HasTicTacToe(MarkType player);
 

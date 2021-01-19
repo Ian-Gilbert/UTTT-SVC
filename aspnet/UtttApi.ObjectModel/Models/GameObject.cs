@@ -23,7 +23,7 @@ namespace UtttApi.ObjectModel.Models
         /// Make a move and mark boards/update focus and playablity accordingly
         /// </summary>
         /// <param name="move"></param>
-        public void MakeMove(MoveObject move)
+        public void MakeMove(Move move)
         {
             Board.MakeMove(move);
             UpdateGameStatus();
@@ -39,7 +39,7 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        public bool IsValidMove(MoveObject move) => Board.IsValidMove(move);
+        public bool IsValidMove(Move move) => Board.IsValidMove(move);
 
         /// <summary>
         /// Switch the current player after a turn

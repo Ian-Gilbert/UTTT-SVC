@@ -67,7 +67,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(string id, MoveObject move)
+        public async Task<IActionResult> Put(string id, Move move)
         {
             GameObject game = await _unitOfWork.Game.SelectAsync(id);
 

@@ -15,7 +15,7 @@ namespace UtttApi.ObjectModel.Models
             }
         }
 
-        public bool IsValidMove(MoveObject move)
+        public bool IsValidMove(Move move)
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
@@ -27,7 +27,7 @@ namespace UtttApi.ObjectModel.Models
             return false;
         }
 
-        public void MakeMove(MoveObject move)
+        public void MakeMove(Move move)
         {
             LocalBoard lb = LocalBoards[move.LbIndex];
 
@@ -36,16 +36,16 @@ namespace UtttApi.ObjectModel.Models
             if (lb.HasTicTacToe(move.Mark))
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Mark = move.Mark, MarkIndex = move.LbIndex });
+                MarkBoard(new Move { Mark = move.Mark, MarkIndex = move.LbIndex });
             }
             else if (lb.IsFull())
             {
                 lb.Playable = false;
-                MarkBoard(new MoveObject { Mark = MarkType.DRAW, MarkIndex = move.LbIndex });
+                MarkBoard(new Move { Mark = MarkType.DRAW, MarkIndex = move.LbIndex });
             }
         }
 
-        public void UpdateFocus(MoveObject move, GameStatus status)
+        public void UpdateFocus(Move move, GameStatus status)
         {
             if (status == GameStatus.IN_PROGRESS)
             {
