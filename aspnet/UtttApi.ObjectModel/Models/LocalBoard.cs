@@ -15,20 +15,5 @@ namespace UtttApi.ObjectModel.Models
             Focus = true;
             Playable = true;
         }
-
-        public int CountPlayer(MarkType player)
-        {
-            int count = 0;
-
-            foreach (var square in Board)
-            {
-                if (square == player)
-                {
-                    count++;
-                }
-            }
-
-            return count;
-        }
     }
 }
