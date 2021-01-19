@@ -25,11 +25,11 @@ namespace UtttApi.WebApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GameObject), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UtttObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            GameObject game = await _unitOfWork.Game.SelectAsync(id);
+            UtttObject game = await _unitOfWork.Game.SelectAsync(id);
 
             if (game == null)
             {
@@ -47,7 +47,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post()
         {
-            var game = await _unitOfWork.Game.InsertAsync(new GameObject());
+            var game = await _unitOfWork.Game.InsertAsync(new UtttObject());
             return CreatedAtAction(
                 nameof(Get),
                 new { id = game.Id },
@@ -64,12 +64,12 @@ namespace UtttApi.WebApi.Controllers
         /// <param name="markIndex"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(GameObject), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(UtttObject), StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(string id, Move move)
         {
-            GameObject game = await _unitOfWork.Game.SelectAsync(id);
+            UtttObject game = await _unitOfWork.Game.SelectAsync(id);
 
             if (game == null)
             {

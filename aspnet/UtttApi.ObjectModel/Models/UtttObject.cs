@@ -5,7 +5,7 @@ namespace UtttApi.ObjectModel.Models
     /// <summary>
     /// Class to control to overall game
     /// </summary>
-    public class GameObject : AEntity
+    public class UtttObject : AEntity
     {
         private GlobalBoard _board = new GlobalBoard();
         public GlobalBoard Board { get => _board; set => _board = value; }
@@ -14,7 +14,7 @@ namespace UtttApi.ObjectModel.Models
         public GameStatus Status { get; set; }
         public MarkType CurrentPlayer { get; set; }
 
-        public GameObject()
+        public UtttObject()
         {
             CurrentPlayer = MarkType.PLAYER1;
         }
