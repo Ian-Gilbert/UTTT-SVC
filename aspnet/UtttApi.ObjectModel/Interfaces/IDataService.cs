@@ -8,7 +8,7 @@ namespace UtttApi.ObjectModel.Interfaces
     /// Type must be an implementation of AEntity, and all methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public interface IService<TEntity> where TEntity : class
+    public interface IDataService<TEntity> where TEntity : class
     {
         /// <summary>
         /// Delete a document by id

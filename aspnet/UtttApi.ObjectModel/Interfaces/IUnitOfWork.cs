@@ -7,6 +7,6 @@ namespace UtttApi.ObjectModel.Interfaces
     /// </summary>
     public interface IUnitOfWork
     {
-        IService<GameObject> Game { get; }
+        IDataService<GameObject> Game { get; }
     }
 }

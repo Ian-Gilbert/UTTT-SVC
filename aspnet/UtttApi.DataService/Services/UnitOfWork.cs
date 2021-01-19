@@ -6,11 +6,11 @@ namespace UtttApi.DataService.Services
     /// <inheritdoc cref="IUnitOfWork"/>
     public class UnitOfWork : IUnitOfWork
     {
-        public IService<GameObject> Game { get; }
+        public IDataService<GameObject> Game { get; }
 
         public UnitOfWork(IUtttDatabaseSettings settings)
         {
-            Game = new GameService(settings);
+            Game = new GameDataService(settings);
         }
     }
 }

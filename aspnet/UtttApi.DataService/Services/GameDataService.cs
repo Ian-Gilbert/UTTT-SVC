@@ -5,8 +5,8 @@ using UtttApi.ObjectModel.Models;
 namespace UtttApi.DataService.Services
 {
     /// <inheritdoc cref="AService"/>
-    public class GameService : AService<GameObject>
+    public class GameDataService : ADataService<GameObject>
     {
-        public GameService(IUtttDatabaseSettings settings) : base(settings, settings.GamesCollectionName) { }
+        public GameDataService(IUtttDatabaseSettings settings) : base(settings, settings.GamesCollectionName) { }
     }
 }

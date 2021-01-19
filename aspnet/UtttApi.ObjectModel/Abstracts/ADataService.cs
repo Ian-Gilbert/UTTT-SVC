@@ -7,7 +7,7 @@ using UtttApi.ObjectModel.Interfaces;
 namespace UtttApi.ObjectModel.Abstracts
 {
     /// <inheritdoc cref="IService"/>
-    public abstract class AService<TEntity> : IService<TEntity> where TEntity : AEntity
+    public abstract class ADataService<TEntity> : IDataService<TEntity> where TEntity : AEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -16,7 +16,7 @@ namespace UtttApi.ObjectModel.Abstracts
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public AService(IUtttDatabaseSettings settings, string CollectionName)
+        public ADataService(IUtttDatabaseSettings settings, string CollectionName)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
