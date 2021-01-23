@@ -12,7 +12,7 @@ namespace UtttApi.DataService
     {
         private readonly IMongoDatabase _db;
 
-        public MongoDbContext(IUtttDatabaseSettings settings)
+        public MongoDbContext(IMongoDbSettings settings)
         {
             var mongoClient = new MongoClient(settings.ConnectionString);
             _db = mongoClient.GetDatabase(settings.DatabaseName);

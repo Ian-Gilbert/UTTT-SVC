@@ -11,7 +11,7 @@ namespace UtttApi.DataService.Services
     {
         public IDataService<UtttObject> Game { get; }
 
-        public UnitOfWork(IUtttDatabaseSettings settings)
+        public UnitOfWork(IMongoDbSettings settings)
         {
             var context = new MongoDbContext(settings);
             Game = new DataService<UtttObject>(context.GetCollection<UtttObject>(settings.GamesCollectionName));

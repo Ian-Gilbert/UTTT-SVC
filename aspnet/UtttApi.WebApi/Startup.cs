@@ -24,12 +24,12 @@ namespace UtttApi.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<UtttDatabaseSettings>(
-                Configuration.GetSection(nameof(UtttDatabaseSettings))
+            services.Configure<MongoDbSettings>(
+                Configuration.GetSection(nameof(MongoDbSettings))
             );
 
-            services.AddSingleton<IUtttDatabaseSettings>(sp =>
-                sp.GetRequiredService<IOptions<UtttDatabaseSettings>>().Value
+            services.AddSingleton<IMongoDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
             );
 
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
