@@ -8,9 +8,9 @@ namespace UtttApi.DataService.Interfaces
     {
         void CheckParseId(string id);
         Task DeleteAsync(string id);
-        Task<TEntity> InsertAsync(TEntity document);
-        Task<TEntity> SelectAsync(string id);
-        Task<IEnumerable<TEntity>> SelectAsync();
+        Task<TEntity> CreateAsync(TEntity document);
+        Task<TEntity> FindAsync(string id);
+        Task<IEnumerable<TEntity>> FindAsync();
         Task UpdateAsync(TEntity document);
     }
 }

@@ -48,7 +48,7 @@ namespace UtttApi.DataService.Services
         /// Check that an id is a valid 24 digid hex string
         /// </summary>
         /// <param name="id"></param>
-        public void CheckParseId(string id)
+        public virtual void CheckParseId(string id)
         {
             if (!ObjectId.TryParse(id, out _))
             {
@@ -77,21 +77,21 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        public virtual async Task<TEntity> InsertAsync(TEntity document)
+        public virtual async Task<TEntity> CreateAsync(TEntity document)
         {
             await _collection.InsertOneAsync(document);
             return document;
         }
 
         /// <summary>
-        /// Select a document by id
+        /// Find a document by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<TEntity> SelectAsync(string id)
+        public virtual async Task<TEntity> FindAsync(string id)
         {
             CheckParseId(id);
-            var entity = await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
+            var entity = await _collection.FindAsync<TEntity>(d => d.Id == id).Result.FirstOrDefaultAsync();
 
             if (entity is null)
             {
@@ -102,12 +102,12 @@ namespace UtttApi.DataService.Services
         }
 
         /// <summary>
-        /// Select all documents in collection
+        /// Find all documents in collection
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TEntity>> SelectAsync() =>
-            await _collection.Find<TEntity>(d => true).ToListAsync();
+        public virtual async Task<IEnumerable<TEntity>> FindAsync() =>
+            await _collection.FindAsync<TEntity>(d => true).Result.ToListAsync();
 
         /// <summary>
         /// Update a document by replacing the whole document in db

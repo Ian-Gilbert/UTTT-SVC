@@ -28,7 +28,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(UtttObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id) =>
-            Ok(await _unitOfWork.Game.SelectAsync(id));
+            Ok(await _unitOfWork.Game.FindAsync(id));
 
         /// <summary>
         /// Create a new game and return the new Id
@@ -38,7 +38,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post()
         {
-            var game = await _unitOfWork.Game.InsertAsync(new UtttObject());
+            var game = await _unitOfWork.Game.CreateAsync(new UtttObject());
             return CreatedAtAction(
                 nameof(Get),
                 new { id = game.Id },
@@ -60,7 +60,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(string id, Move move)
         {
-            UtttObject game = await _unitOfWork.Game.SelectAsync(id);
+            UtttObject game = await _unitOfWork.Game.FindAsync(id);
             game.MakeMove(move);
             await _unitOfWork.Game.UpdateAsync(game);
             return Accepted(game);
