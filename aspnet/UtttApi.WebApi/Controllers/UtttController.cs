@@ -27,17 +27,8 @@ namespace UtttApi.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UtttObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get(string id)
-        {
-            UtttObject game = await _unitOfWork.Game.SelectAsync(id);
-
-            if (game == null)
-            {
-                return NotFound($"Could not find the game with id {id}");
-            }
-
-            return Ok(await _unitOfWork.Game.SelectAsync(id));
-        }
+        public async Task<IActionResult> Get(string id) =>
+            Ok(await _unitOfWork.Game.SelectAsync(id));
 
         /// <summary>
         /// Create a new game and return the new Id
@@ -70,29 +61,9 @@ namespace UtttApi.WebApi.Controllers
         public async Task<IActionResult> Put(string id, Move move)
         {
             UtttObject game = await _unitOfWork.Game.SelectAsync(id);
-
-            if (game == null)
-            {
-                return NotFound($"Could not find the game with id {id}");
-            }
-
-            if (game.Status != GameStatus.IN_PROGRESS)
-            {
-                return BadRequest($"Game {id}: The game is finished");
-            }
-
-
-            if (move.Mark == game.CurrentPlayer)
-            {
-                if (game.IsValidMove(move))
-                {
-                    game.MakeMove(move);
-                    await _unitOfWork.Game.UpdateAsync(game);
-                    return Accepted(game);
-                }
-                return BadRequest($"Game {id}: The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark.ToString("d")}");
-            }
-            return BadRequest($"Game {id}: It is not player {move.Mark.ToString("d")}'s turn");
+            game.MakeMove(move);
+            await _unitOfWork.Game.UpdateAsync(game);
+            return Accepted(game);
         }
 
         /// <summary>
@@ -102,15 +73,12 @@ namespace UtttApi.WebApi.Controllers
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(string id)
         {
-            if (await _unitOfWork.Game.DeleteAsync(id))
-            {
-                return NoContent();
-            }
-
-            return NotFound($"Could not find the game with id {id}");
+            await _unitOfWork.Game.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

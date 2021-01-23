@@ -1,4 +1,6 @@
+using System.Net;
 using UtttApi.ObjectModel.Abstracts;
+using UtttApi.ObjectModel.Exceptions;
 
 namespace UtttApi.ObjectModel.Models
 {
@@ -25,6 +27,7 @@ namespace UtttApi.ObjectModel.Models
         /// <param name="move"></param>
         public void MakeMove(Move move)
         {
+            CheckValidMove(move); // throw exception if not valid move
             Board.MakeMove(move);
             UpdateGameStatus();
             Board.UpdateFocus(move, Status);
@@ -35,11 +38,39 @@ namespace UtttApi.ObjectModel.Models
         }
 
         /// <summary>
-        /// Check if a move has been played already and lb is in focus
+        /// Check if a move is valid, if not throw HttpResponseException with 400 Bad Request status
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        public bool IsValidMove(Move move) => Board.IsValidMove(move);
+        private void CheckValidMove(Move move)
+        {
+            // game is not in progress
+            if (Status != GameStatus.IN_PROGRESS)
+            {
+                throw new HttpResponseException(
+                    HttpStatusCode.BadRequest,
+                    $"The game is finished @ id = {Id}"
+                );
+            }
+
+            // not player's turn
+            if (move.Mark != CurrentPlayer)
+            {
+                throw new HttpResponseException(
+                    HttpStatusCode.BadRequest,
+                    $"It is not player {move.Mark.ToString("d")}'s turn @ id = {Id}"
+                );
+            }
+
+            // move has already been made or lb is not in focus
+            if (Board.IsValidMove(move))
+            {
+                throw new HttpResponseException(
+                    HttpStatusCode.BadRequest,
+                    $"The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark.ToString("d")} @ id = {Id}"
+                );
+            }
+        }
 
         /// <summary>
         /// Switch the current player after a turn

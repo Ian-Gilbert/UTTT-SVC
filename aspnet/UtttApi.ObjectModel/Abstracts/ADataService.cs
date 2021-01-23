@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using UtttApi.ObjectModel.Exceptions;
 using UtttApi.ObjectModel.Interfaces;
 
 namespace UtttApi.ObjectModel.Abstracts
@@ -23,15 +25,23 @@ namespace UtttApi.ObjectModel.Abstracts
             _collection = database.GetCollection<TEntity>(CollectionName);
         }
 
-        public virtual async Task<bool> DeleteAsync(string id)
+        protected void CheckParseID(string id)
         {
-            long count = 0;
-            if (ObjectId.TryParse(id, out _))
+            if (!ObjectId.TryParse(id, out _))
             {
-                DeleteResult deleteResult = await _collection.DeleteOneAsync(d => d.Id == id);
-                count = deleteResult.DeletedCount;
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"'{id}' is not a valid 24 digit hex string");
             }
-            return count == 1;
+        }
+
+        public virtual async Task DeleteAsync(string id)
+        {
+            CheckParseID(id);
+            var deletedResult = await _collection.DeleteOneAsync(d => d.Id == id);
+
+            if (deletedResult.DeletedCount == 0)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"No results found @ id = {id}");
+            }
         }
 
         public virtual async Task<TEntity> InsertAsync(TEntity document)
@@ -42,12 +52,15 @@ namespace UtttApi.ObjectModel.Abstracts
 
         public virtual async Task<TEntity> SelectAsync(string id)
         {
-            if (!ObjectId.TryParse(id, out _))
+            CheckParseID(id);
+            var entity = await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
+
+            if (entity is null)
             {
-                return null;
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"No results found @ id = {id}");
             }
 
-            return await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
+            return entity;
         }
 
         public virtual async Task<IEnumerable<TEntity>> SelectAsync() =>

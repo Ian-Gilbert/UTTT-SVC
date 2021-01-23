@@ -15,7 +15,7 @@ namespace UtttApi.ObjectModel.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> DeleteAsync(string id);
+        Task DeleteAsync(string id);
 
         /// <summary>
         /// Insert a document

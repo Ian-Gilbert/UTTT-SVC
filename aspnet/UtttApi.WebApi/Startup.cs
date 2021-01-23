@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using UtttApi.DataService.Services;
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
+using UtttApi.WebApi.Filters;
 
 namespace UtttApi.WebApi
 {
@@ -37,6 +38,7 @@ namespace UtttApi.WebApi
             services.AddSingleton<IUtttDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<UtttDatabaseSettings>>().Value
             );
+            // services.AddSingleton<IUtttDatabaseSettings, UtttDatabaseSettings>();
 
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
@@ -48,7 +50,11 @@ namespace UtttApi.WebApi
                 });
             });
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UtttApi.WebApi", Version = "v1" });
@@ -63,6 +69,10 @@ namespace UtttApi.WebApi
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UtttApi.WebApi v1"));
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             // app.UseHttpsRedirection();
