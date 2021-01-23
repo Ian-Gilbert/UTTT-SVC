@@ -1,21 +1,23 @@
 using System.Net;
-using UtttApi.ObjectModel.Abstracts;
+using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Exceptions;
 
 namespace UtttApi.ObjectModel.Models
 {
     /// <summary>
-    /// Class to control to overall game
+    /// Class to manage the overall game
     /// </summary>
-    public class UtttObject : AEntity
+    public class UtttObject : IEntity
     {
-        private GlobalBoard _board = new GlobalBoard();
-        public GlobalBoard Board { get => _board; set => _board = value; }
-        // public Player PLAYER1Player { get; set; }
-        // public Player OPlayer { get; set; }
+        public string Id { get; set; }
         public GameStatus Status { get; set; }
         public MarkType CurrentPlayer { get; set; }
+
+        private GlobalBoard _board = new GlobalBoard();
+        public GlobalBoard Board { get => _board; set => _board = value; }
+        // public Player Player1 { get; set; }
+        // public Player Player2 { get; set; }
 
         public UtttObject()
         {

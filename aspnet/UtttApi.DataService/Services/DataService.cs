@@ -2,20 +2,23 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using UtttApi.DataService.Interfaces;
 using UtttApi.DataService.Settings;
-using UtttApi.ObjectModel.Abstracts;
+using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Exceptions;
 
 namespace UtttApi.DataService.Services
 {
     /// <summary>
     /// A generic service to provide CRUD methods for storing data in a mongo database.
-    /// Type must be an implementation of AEntity, and all methods are virtual.
+    /// TEntity must implement IEntity (ensures Id property to map to), and all methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class DataService<TEntity> : IDataService<TEntity> where TEntity : AEntity
+    public class DataService<TEntity> : IDataService<TEntity> where TEntity : IEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -26,6 +29,16 @@ namespace UtttApi.DataService.Services
         /// <param name="CollectionName"></param>
         public DataService(IUtttDatabaseSettings settings, string collectionName)
         {
+            // Define BSON representation for TEntity
+            // Removes mogodb.driver dependency in ObjectModel lib
+            BsonClassMap.RegisterClassMap<TEntity>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapIdMember(c => c.Id)
+                  .SetSerializer(new StringSerializer(BsonType.ObjectId))
+                  .SetIdGenerator(StringObjectIdGenerator.Instance);
+            });
+
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             _collection = database.GetCollection<TEntity>(collectionName);
