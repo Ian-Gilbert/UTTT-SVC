@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.ObjectModel.Interfaces

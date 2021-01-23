@@ -1,16 +1,19 @@
-using UtttApi.ObjectModel.Interfaces;
+using UtttApi.DataService.Interfaces;
+using UtttApi.DataService.Settings;
 using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.DataService.Services
 {
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <summary>
+    /// Contains all services and methods required to store data
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         public IDataService<UtttObject> Game { get; }
 
         public UnitOfWork(IUtttDatabaseSettings settings)
         {
-            Game = new GameDataService(settings);
+            Game = new DataService<UtttObject>(settings, settings.GamesCollectionName);
         }
     }
 }

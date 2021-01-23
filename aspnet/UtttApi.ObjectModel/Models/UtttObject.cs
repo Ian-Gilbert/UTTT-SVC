@@ -1,5 +1,6 @@
 using System.Net;
 using UtttApi.ObjectModel.Abstracts;
+using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Exceptions;
 
 namespace UtttApi.ObjectModel.Models
@@ -63,7 +64,7 @@ namespace UtttApi.ObjectModel.Models
             }
 
             // move has already been made or lb is not in focus
-            if (Board.IsValidMove(move))
+            if (!Board.IsValidMove(move))
             {
                 throw new HttpResponseException(
                     HttpStatusCode.BadRequest,

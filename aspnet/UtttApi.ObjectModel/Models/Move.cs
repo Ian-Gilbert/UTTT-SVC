@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using UtttApi.ObjectModel.Enums;
 
 namespace UtttApi.ObjectModel.Models
 {

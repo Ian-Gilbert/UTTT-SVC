@@ -3,13 +3,19 @@ using System.Net;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using UtttApi.DataService.Interfaces;
+using UtttApi.DataService.Settings;
+using UtttApi.ObjectModel.Abstracts;
 using UtttApi.ObjectModel.Exceptions;
-using UtttApi.ObjectModel.Interfaces;
 
-namespace UtttApi.ObjectModel.Abstracts
+namespace UtttApi.DataService.Services
 {
-    /// <inheritdoc cref="IService"/>
-    public abstract class ADataService<TEntity> : IDataService<TEntity> where TEntity : AEntity
+    /// <summary>
+    /// A generic service to provide CRUD methods for storing data in a mongo database.
+    /// Type must be an implementation of AEntity, and all methods are virtual.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    public class DataService<TEntity> : IDataService<TEntity> where TEntity : AEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -18,14 +24,18 @@ namespace UtttApi.ObjectModel.Abstracts
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public ADataService(IUtttDatabaseSettings settings, string CollectionName)
+        public DataService(IUtttDatabaseSettings settings, string collectionName)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<TEntity>(CollectionName);
+            _collection = database.GetCollection<TEntity>(collectionName);
         }
 
-        protected void CheckParseID(string id)
+        /// <summary>
+        /// Check that an id is a valid 24 digid hex string
+        /// </summary>
+        /// <param name="id"></param>
+        public void CheckParseId(string id)
         {
             if (!ObjectId.TryParse(id, out _))
             {
@@ -33,9 +43,14 @@ namespace UtttApi.ObjectModel.Abstracts
             }
         }
 
+        /// <summary>
+        /// Delete a document by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual async Task DeleteAsync(string id)
         {
-            CheckParseID(id);
+            CheckParseId(id);
             var deletedResult = await _collection.DeleteOneAsync(d => d.Id == id);
 
             if (deletedResult.DeletedCount == 0)
@@ -44,15 +59,25 @@ namespace UtttApi.ObjectModel.Abstracts
             }
         }
 
+        /// <summary>
+        /// Insert a document
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
         public virtual async Task<TEntity> InsertAsync(TEntity document)
         {
             await _collection.InsertOneAsync(document);
             return document;
         }
 
+        /// <summary>
+        /// Select a document by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual async Task<TEntity> SelectAsync(string id)
         {
-            CheckParseID(id);
+            CheckParseId(id);
             var entity = await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync();
 
             if (entity is null)
@@ -63,9 +88,19 @@ namespace UtttApi.ObjectModel.Abstracts
             return entity;
         }
 
+        /// <summary>
+        /// Select all documents in collection
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> SelectAsync() =>
             await _collection.Find<TEntity>(d => true).ToListAsync();
 
+        /// <summary>
+        /// Update a document by replacing the whole document in db
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
         public virtual async Task UpdateAsync(TEntity document) =>
             await _collection.ReplaceOneAsync(d => d.Id == document.Id, document);
     }

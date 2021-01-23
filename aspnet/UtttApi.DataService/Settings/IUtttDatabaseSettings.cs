@@ -1,4 +1,4 @@
-namespace UtttApi.ObjectModel.Interfaces
+namespace UtttApi.DataService.Settings
 {
     public interface IUtttDatabaseSettings
     {

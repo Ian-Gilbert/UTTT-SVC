@@ -1,20 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using UtttApi.DataService.Services;
-using UtttApi.ObjectModel.Interfaces;
-using UtttApi.ObjectModel.Models;
+using UtttApi.DataService.Settings;
+using UtttApi.DataService.Interfaces;
 using UtttApi.WebApi.Filters;
 
 namespace UtttApi.WebApi
@@ -38,7 +31,6 @@ namespace UtttApi.WebApi
             services.AddSingleton<IUtttDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<UtttDatabaseSettings>>().Value
             );
-            // services.AddSingleton<IUtttDatabaseSettings, UtttDatabaseSettings>();
 
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
