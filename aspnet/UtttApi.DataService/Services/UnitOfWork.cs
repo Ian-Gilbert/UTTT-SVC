@@ -13,7 +13,8 @@ namespace UtttApi.DataService.Services
 
         public UnitOfWork(IUtttDatabaseSettings settings)
         {
-            Game = new DataService<UtttObject>(settings, settings.GamesCollectionName);
+            var context = new MongoDbContext(settings);
+            Game = new DataService<UtttObject>(context.GetCollection<UtttObject>(settings.GamesCollectionName));
         }
     }
 }

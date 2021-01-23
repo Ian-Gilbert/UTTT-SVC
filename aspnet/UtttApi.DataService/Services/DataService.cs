@@ -2,12 +2,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using UtttApi.DataService.Interfaces;
-using UtttApi.DataService.Settings;
 using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Exceptions;
 
@@ -23,25 +19,13 @@ namespace UtttApi.DataService.Services
         protected readonly IMongoCollection<TEntity> _collection;
 
         /// <summary>
-        /// Provide the db connection settings and the name of the collection.
+        /// Provide the db collection
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public DataService(IUtttDatabaseSettings settings, string collectionName)
+        public DataService(IMongoCollection<TEntity> collection)
         {
-            // Define BSON representation for TEntity
-            // Removes mogodb.driver dependency in ObjectModel lib
-            BsonClassMap.RegisterClassMap<TEntity>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id)
-                  .SetSerializer(new StringSerializer(BsonType.ObjectId))
-                  .SetIdGenerator(StringObjectIdGenerator.Instance);
-            });
-
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<TEntity>(collectionName);
+            _collection = collection;
         }
 
         /// <summary>
