@@ -8,18 +8,34 @@ using UtttApi.ObjectModel.Interfaces;
 
 namespace UtttApi.DataService
 {
+    /// <summary>
+    /// Context that sets up a MongoDb connection with the provided settings
+    /// </summary>
     public class MongoDbContext
     {
         private readonly IMongoDatabase _db;
 
+        /// <summary>
+        /// Creates MongoDb connection with provided settings
+        /// </summary>
+        /// <param name="settings"></param>
         public MongoDbContext(IMongoDbSettings settings)
         {
             var mongoClient = new MongoClient(settings.ConnectionString);
             _db = mongoClient.GetDatabase(settings.DatabaseName);
         }
 
+        /// <summary>
+        /// Sets up class map for TEntity and returns the collection with the given name.
+        /// TEntity must implement IEntity.
+        /// </summary>
+        /// <param name="collectionName"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public IMongoCollection<TEntity> GetCollection<TEntity>(string collectionName) where TEntity : IEntity
         {
+            // Configure mapping from TEntity to BSON
+            // In particular, enure that the Id property is properly mapped to the _id BSON field
             BsonClassMap.RegisterClassMap<TEntity>(cm =>
             {
                 cm.AutoMap();

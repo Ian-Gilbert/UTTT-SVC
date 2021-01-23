@@ -11,7 +11,8 @@ namespace UtttApi.DataService.Services
 {
     /// <summary>
     /// A generic service to provide CRUD methods for storing data in a mongo database.
-    /// TEntity must implement IEntity (ensures Id property to map to), and all methods are virtual.
+    /// TEntity must implement IEntity.
+    /// All methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class DataService<TEntity> : IDataService<TEntity> where TEntity : IEntity
