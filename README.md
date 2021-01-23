@@ -4,14 +4,14 @@ This is a Rest API for the game of Ultimate Tic Tac Toe, with both two-player an
 
 ## Endpoints
 
-### GET /rest/uttt/{id}
+### GET /rest/uttt/uttt/{id}
 Return a game by its ID number.
 
-### POST /rest/uttt
+### POST /rest/uttt/uttt
 Create a new game.
 
-### PUT /rest/uttt/{id}
+### PUT /rest/uttt/uttt/{id}
 Make a move on the game with the given ID number. Body contains player/move info.
 
-### DELETE /rest/uttt/{id}
+### DELETE /rest/uttt/uttt/{id}
 Delete a game by its ID number.
