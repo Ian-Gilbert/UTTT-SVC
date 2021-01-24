@@ -34,17 +34,22 @@ namespace UtttApi.DataService
         /// <returns></returns>
         public IMongoCollection<TEntity> GetCollection<TEntity>(string collectionName) where TEntity : IEntity
         {
-            // Configure mapping from TEntity to BSON
-            // In particular, enure that the Id property is properly mapped to the _id BSON field
-            BsonClassMap.RegisterClassMap<TEntity>(cm =>
+            if (!string.IsNullOrEmpty(collectionName))
             {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id)
-                  .SetSerializer(new StringSerializer(BsonType.ObjectId))
-                  .SetIdGenerator(StringObjectIdGenerator.Instance);
-            });
+                // Configure mapping from TEntity to BSON
+                // In particular, enure that the Id property is properly mapped to the _id BSON field
+                BsonClassMap.RegisterClassMap<TEntity>(cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapIdMember(c => c.Id)
+                      .SetSerializer(new StringSerializer(BsonType.ObjectId))
+                      .SetIdGenerator(StringObjectIdGenerator.Instance);
+                });
 
-            return _db.GetCollection<TEntity>(collectionName);
+                return _db.GetCollection<TEntity>(collectionName);
+            }
+
+            return null;
         }
     }
 }
