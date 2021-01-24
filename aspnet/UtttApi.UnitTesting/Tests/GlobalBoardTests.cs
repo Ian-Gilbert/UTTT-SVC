@@ -1,22 +1,28 @@
+using UtttApi.ObjectModel.Models;
 using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
 {
     public class GlobalBoardTests
     {
+        public GlobalBoard gb { get; set; }
+
         public GlobalBoardTests()
         {
-
+            gb = new GlobalBoard();
         }
 
         [Fact]
-        public void TestName()
+        public void GlobalBoard_ShouldCreateLocalBoards()
         {
-            //Given
+            Assert.IsType<LocalBoard[]>(gb.LocalBoards);
+            Assert.Equal(9, gb.LocalBoards.Length);
+        }
 
-            //When
+        [Fact]
+        public void IsValidMove_ReturnsFalse_WhenLbIsNotInFocus()
+        {
 
-            //Then
         }
     }
 }
