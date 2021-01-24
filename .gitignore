@@ -5,8 +5,8 @@ appsettings*
 !appsettings.json
 
 # testing
-coveragereport/
-TestResults/
+CoverageReport/
+CoverageResults/
 
 # general
 .DS_Store
