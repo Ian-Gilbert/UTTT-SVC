@@ -8,12 +8,15 @@ namespace UtttApi.UnitTesting.Tests
     public class MongoDbContextTests
     {
         private readonly MongoDbContext context;
+        private IMongoDbSettings settings;
+
         public MongoDbContextTests()
         {
-            var settings = new MongoDbSettings()
+            settings = new MongoDbSettings()
             {
                 ConnectionString = "mongodb://test123",
-                DatabaseName = "Test"
+                DatabaseName = "Test",
+                GamesCollectionName = "TestCollection"
             };
             context = new MongoDbContext(settings);
         }
@@ -30,10 +33,9 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void GetCollection_ReturnsCollection_WhenNameIsNotEmpty()
         {
-            var collectionName = "testCollection";
-            var collection = context.GetCollection<UtttObject>(collectionName);
+            var collection = context.GetCollection<UtttObject>(settings.GamesCollectionName);
             Assert.NotNull(collection);
-            Assert.Equal(collectionName, collection.CollectionNamespace.CollectionName);
+            Assert.Equal(settings.GamesCollectionName, collection.CollectionNamespace.CollectionName);
         }
     }
 }
