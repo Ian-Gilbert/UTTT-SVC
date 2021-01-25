@@ -12,12 +12,19 @@ namespace UtttApi.UnitTesting.Tests
 
         public GlobalBoardTests()
         {
-            var player = MarkType.PLAYER1;
-            var lbIndex = 0;
-            var markIndex = 0;
-            move = new Move() { Mark = player, LbIndex = lbIndex, MarkIndex = markIndex };
+            move = new Move() { Mark = MarkType.PLAYER1, LbIndex = 0, MarkIndex = 0 };
 
             gb = new GlobalBoard();
+        }
+
+        [Fact]
+        public void GlobalBoard_Initializes9LocalBoards()
+        {
+            Assert.Equal(9, gb.LocalBoards.Length);
+            foreach (var lb in gb.LocalBoards)
+            {
+                Assert.NotNull(lb);
+            }
         }
 
         [Fact]

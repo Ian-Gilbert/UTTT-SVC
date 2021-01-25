@@ -50,6 +50,16 @@ namespace UtttApi.UnitTesting.Tests
         }
 
         [Fact]
+        public void TicTacTorBoard_Initializes9EmptyMarks()
+        {
+            Assert.Equal(9, ticTacToeBoard.Board.Length);
+            foreach (var mark in ticTacToeBoard.Board)
+            {
+                Assert.Equal(MarkType.EMPTY, mark);
+            }
+        }
+
+        [Fact]
         public void HasTicTacToe_ReturnsFalse_WhenThereIsNoThreeInARow()
         {
             var result = ticTacToeBoard.HasTicTacToe(move.Mark);
