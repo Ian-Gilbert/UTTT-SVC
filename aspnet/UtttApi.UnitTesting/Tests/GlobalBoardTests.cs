@@ -38,28 +38,20 @@ namespace UtttApi.UnitTesting.Tests
         public void IsValidMove_ReturnsFalse_WhenLbIsNotInFocus()
         {
             gb.LocalBoards[move.LbIndex].Focus = false;
-
-            var result = gb.IsValidMove(move);
-
-            Assert.False(result);
+            Assert.False(gb.IsValidMove(move));
         }
 
         [Fact]
         public void IsValidMove_ReturnsFalse_WhenMarkIsNotEmpty()
         {
             gb.LocalBoards[move.LbIndex].Board[move.MarkIndex] = MarkType.DRAW;
-
-            var result = gb.IsValidMove(move);
-
-            Assert.False(result);
+            Assert.False(gb.IsValidMove(move));
         }
 
         [Fact]
         public void IsValidMove_ReturnsTrue_WhenMoveIsValid()
         {
-            var result = gb.IsValidMove(move);
-
-            Assert.True(result);
+            Assert.True(gb.IsValidMove(move));
         }
 
         [Fact]

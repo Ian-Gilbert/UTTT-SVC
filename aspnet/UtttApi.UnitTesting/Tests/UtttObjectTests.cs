@@ -23,37 +23,49 @@ namespace UtttApi.UnitTesting.Tests
             Assert.Equal(MarkType.PLAYER1, uttt.CurrentPlayer);
         }
 
-        [Fact]
-        public void CheckValidMove_ThrowsException_WhenGameIsNotInProgress()
+        [Theory]
+        [InlineData(GameStatus.DRAW)]
+        [InlineData(GameStatus.PLAYER1_WINS)]
+        [InlineData(GameStatus.PLAYER2_WINS)]
+        public void IsValidMove_ReturnsFalse_WhenGameIsNotInProgress(GameStatus status)
         {
-            uttt.Status = GameStatus.DRAW;
-            var resultDraw = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
-            Assert.Equal(400, resultDraw.StatusCode);
-
-            uttt.Status = GameStatus.PLAYER1_WINS;
-            var resultPlayer1 = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
-            Assert.Equal(400, resultPlayer1.StatusCode);
-
-            uttt.Status = GameStatus.PLAYER2_WINS;
-            var resultPlayer2 = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
-            Assert.Equal(400, resultPlayer2.StatusCode);
+            uttt.Status = status;
+            string message;
+            Assert.False(uttt.IsValidMove(move, out message));
+            Assert.NotNull(message);
         }
 
         [Fact]
-        public void CheckValidMove_ThrowsException_WhenNotPlayersTurn()
+        public void IsValidMove_ReturnsFalse_WhenNotPlayersTurn()
         {
             uttt.CurrentPlayer = MarkType.PLAYER2;
-            var result = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
-            Assert.Equal(400, result.StatusCode);
+            string message;
+            Assert.False(uttt.IsValidMove(move, out message));
+            Assert.NotNull(message);
         }
 
         [Fact]
-        public void CheckValidMove_ThrowsException_WhenInvalidMove()
+        public void IsValidMove_ReturnsFalse_WhenNextLbIsNotInFocus()
         {
             uttt.GlobalBoard.LocalBoards[move.LbIndex].Focus = false; // target board is not in focus
+            string message;
+            Assert.False(uttt.IsValidMove(move, out message));
+            Assert.NotNull(message);
+        }
 
-            var result2 = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
-            Assert.Equal(400, result2.StatusCode);
+        [Fact]
+        public void IsValidMove_ReturnsFalse_WhenMarkIsNotEmpty()
+        {
+            uttt.GlobalBoard.LocalBoards[move.LbIndex].Board[move.MarkIndex] = MarkType.DRAW;
+            string message;
+            Assert.False(uttt.IsValidMove(move, out message));
+            Assert.NotNull(message);
+        }
+
+        [Fact]
+        public void IsValidMove_ReturnsTrue_WhenValidMove()
+        {
+            Assert.True(uttt.IsValidMove(move, out _));
         }
 
         [Fact]
