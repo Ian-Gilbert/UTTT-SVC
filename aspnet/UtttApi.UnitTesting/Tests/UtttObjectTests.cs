@@ -50,7 +50,7 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void CheckValidMove_ThrowsException_WhenInvalidMove()
         {
-            uttt.Board.LocalBoards[move.LbIndex].Focus = false; // target board is not in focus
+            uttt.GlobalBoard.LocalBoards[move.LbIndex].Focus = false; // target board is not in focus
 
             var result2 = Assert.Throws<HttpResponseException>(() => uttt.CheckValidMove(move));
             Assert.Equal(400, result2.StatusCode);
@@ -66,30 +66,19 @@ namespace UtttApi.UnitTesting.Tests
             Assert.Equal(MarkType.PLAYER1, uttt.CurrentPlayer);
         }
 
-        [Fact]
-        public void UpdateGameStatus_SetsStatusToPlayer1Wins_WhenPlayer1HasTicTacToeOnGlobalBoard()
+        [Theory]
+        [InlineData(MarkType.PLAYER1, GameStatus.PLAYER1_WINS)]
+        [InlineData(MarkType.PLAYER2, GameStatus.PLAYER2_WINS)]
+        public void UpdateGameStatus_SetsStatusToWinner_WhenGlobalBoardHasTicTacToe(MarkType player, GameStatus status)
         {
             for (int i = 0; i < 3; i++)
             {
-                uttt.Board.Board[i] = MarkType.PLAYER1;
+                uttt.GlobalBoard.Board[i] = player;
             }
 
-            uttt.UpdateGameStatus();
+            uttt.UpdateGameStatus(player);
 
-            Assert.Equal(GameStatus.PLAYER1_WINS, uttt.Status);
-        }
-
-        [Fact]
-        public void UpdateGameStatus_SetsStatusToPlayer2Wins_WhenPlayer2HasTicTacToeOnGlobalBoard()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                uttt.Board.Board[i] = MarkType.PLAYER2;
-            }
-
-            uttt.UpdateGameStatus();
-
-            Assert.Equal(GameStatus.PLAYER2_WINS, uttt.Status);
+            Assert.Equal(status, uttt.Status);
         }
 
         [Fact]
@@ -97,10 +86,10 @@ namespace UtttApi.UnitTesting.Tests
         {
             for (int i = 0; i < 9; i++)
             {
-                uttt.Board.Board[i] = MarkType.DRAW;
+                uttt.GlobalBoard.Board[i] = MarkType.DRAW;
             }
 
-            uttt.UpdateGameStatus();
+            uttt.UpdateGameStatus(MarkType.PLAYER1);
 
             Assert.Equal(GameStatus.DRAW, uttt.Status);
         }
@@ -117,7 +106,7 @@ namespace UtttApi.UnitTesting.Tests
         public void MakeMove_MakesMove_WhenValidMove()
         {
             uttt.MakeMove(move);
-            Assert.Equal(move.Mark, uttt.Board.LocalBoards[move.LbIndex].Board[move.MarkIndex]);
+            Assert.Equal(move.Mark, uttt.GlobalBoard.LocalBoards[move.LbIndex].Board[move.MarkIndex]);
         }
 
         [Fact]
@@ -125,8 +114,8 @@ namespace UtttApi.UnitTesting.Tests
         {
             for (int i = 1; i < 3; i++)
             {
-                uttt.Board.Board[i] = MarkType.PLAYER1;
-                uttt.Board.LocalBoards[move.LbIndex].Board[i] = MarkType.PLAYER1;
+                uttt.GlobalBoard.Board[i] = MarkType.PLAYER1;
+                uttt.GlobalBoard.LocalBoards[move.LbIndex].Board[i] = MarkType.PLAYER1;
             }
 
             uttt.MakeMove(move);
@@ -138,7 +127,7 @@ namespace UtttApi.UnitTesting.Tests
         public void MakeMove_UpdatesFocus()
         {
             move.MarkIndex = 3;
-            var nextLb = uttt.Board.LocalBoards[move.MarkIndex];
+            var nextLb = uttt.GlobalBoard.LocalBoards[move.MarkIndex];
 
             uttt.MakeMove(move);
 
@@ -158,8 +147,8 @@ namespace UtttApi.UnitTesting.Tests
         {
             for (int i = 1; i < 3; i++)
             {
-                uttt.Board.Board[i] = MarkType.PLAYER1;
-                uttt.Board.LocalBoards[move.LbIndex].Board[i] = MarkType.PLAYER1;
+                uttt.GlobalBoard.Board[i] = MarkType.PLAYER1;
+                uttt.GlobalBoard.LocalBoards[move.LbIndex].Board[i] = MarkType.PLAYER1;
             }
 
             uttt.MakeMove(move);

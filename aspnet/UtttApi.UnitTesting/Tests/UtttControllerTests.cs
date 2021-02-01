@@ -64,7 +64,7 @@ namespace UtttApi.UnitTesting.Tests
             var resultObject = (UtttObject)result.Value;
 
             Assert.Equal(uttt.Id, resultObject.Id);
-            Assert.Equal(move.Mark, resultObject.Board.LocalBoards[move.LbIndex].Board[move.MarkIndex]);
+            Assert.Equal(move.Mark, resultObject.GlobalBoard.LocalBoards[move.LbIndex].Board[move.MarkIndex]);
 
             mockUnitOfWork.Verify(u => u.Game.UpdateAsync(uttt), Times.Once);
         }

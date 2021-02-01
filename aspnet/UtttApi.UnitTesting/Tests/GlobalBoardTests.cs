@@ -99,7 +99,7 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void UpdateFocus_ShouldSetEverythingToFalse_WhenGameIsFinished()
         {
-            gb.UpdateFocus(move, GameStatus.DRAW);
+            gb.UpdateFocus(0, GameStatus.DRAW);
 
             foreach (var lb in gb.LocalBoards)
             {
@@ -113,7 +113,7 @@ namespace UtttApi.UnitTesting.Tests
         {
             var nextLb = gb.LocalBoards[move.MarkIndex];
 
-            gb.UpdateFocus(move, GameStatus.IN_PROGRESS);
+            gb.UpdateFocus(move.MarkIndex, GameStatus.IN_PROGRESS);
 
             foreach (var lb in gb.LocalBoards)
             {
@@ -134,7 +134,7 @@ namespace UtttApi.UnitTesting.Tests
             var nextLb = gb.LocalBoards[move.MarkIndex];
             nextLb.Playable = false;
 
-            gb.UpdateFocus(move, GameStatus.IN_PROGRESS);
+            gb.UpdateFocus(move.MarkIndex, GameStatus.IN_PROGRESS);
 
             foreach (var lb in gb.LocalBoards)
             {

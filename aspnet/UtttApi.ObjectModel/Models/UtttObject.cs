@@ -15,7 +15,7 @@ namespace UtttApi.ObjectModel.Models
         public MarkType CurrentPlayer { get; set; }
 
         private GlobalBoard _board = new GlobalBoard();
-        public GlobalBoard Board { get => _board; set => _board = value; }
+        public GlobalBoard GlobalBoard { get => _board; set => _board = value; }
         // public Player Player1 { get; set; }
         // public Player Player2 { get; set; }
 
@@ -31,9 +31,9 @@ namespace UtttApi.ObjectModel.Models
         public void MakeMove(Move move)
         {
             CheckValidMove(move); // throw exception if not valid move
-            Board.MakeMove(move);
-            UpdateGameStatus();
-            Board.UpdateFocus(move, Status);
+            GlobalBoard.MakeMove(move);
+            UpdateGameStatus(move.Mark);
+            GlobalBoard.UpdateFocus(move.MarkIndex, Status);
             if (Status == GameStatus.IN_PROGRESS)
             {
                 SwitchCurrentPlayer();
@@ -66,7 +66,7 @@ namespace UtttApi.ObjectModel.Models
             }
 
             // move has already been made or lb is not in focus
-            if (!Board.IsValidMove(move))
+            if (!GlobalBoard.IsValidMove(move))
             {
                 throw new HttpResponseException(
                     HttpStatusCode.BadRequest,
@@ -93,17 +93,20 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Check if the game has ended, and update status accordingly
         /// </summary>
-        public void UpdateGameStatus()
+        public void UpdateGameStatus(MarkType player)
         {
-            if (Board.HasTicTacToe(MarkType.PLAYER1))
+            if (GlobalBoard.HasTicTacToe(player))
             {
-                Status = GameStatus.PLAYER1_WINS;
+                if (player == MarkType.PLAYER1)
+                {
+                    Status = GameStatus.PLAYER1_WINS;
+                }
+                else if (player == MarkType.PLAYER2)
+                {
+                    Status = GameStatus.PLAYER2_WINS;
+                }
             }
-            else if (Board.HasTicTacToe(MarkType.PLAYER2))
-            {
-                Status = GameStatus.PLAYER2_WINS;
-            }
-            else if (Board.IsFull())
+            else if (GlobalBoard.IsFull())
             {
                 Status = GameStatus.DRAW;
             }
