@@ -31,7 +31,7 @@ namespace UtttApi.WebApi.Controllers
             Ok(await _unitOfWork.Game.FindAsync(id));
 
         /// <summary>
-        /// Create a new game and return the new Id
+        /// Create a new game
         /// </summary>
         /// <returns></returns>
         [HttpPost]

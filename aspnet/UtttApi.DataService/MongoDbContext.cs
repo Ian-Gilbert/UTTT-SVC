@@ -14,6 +14,7 @@ namespace UtttApi.DataService
     public class MongoDbContext
     {
         private readonly IMongoDatabase _db;
+        private static readonly object _lock = new object();
 
         /// <summary>
         /// Creates MongoDb connection with provided settings
@@ -36,15 +37,23 @@ namespace UtttApi.DataService
         {
             if (!string.IsNullOrEmpty(collectionName))
             {
-                // Configure mapping from TEntity to BSON
-                // In particular, enure that the Id property is properly mapped to the _id BSON field
-                BsonClassMap.RegisterClassMap<TEntity>(cm =>
+                // IsClassMapRegistered is not thread safe
+                lock (_lock)
                 {
-                    cm.AutoMap();
-                    cm.MapIdMember(c => c.Id)
-                      .SetSerializer(new StringSerializer(BsonType.ObjectId))
-                      .SetIdGenerator(StringObjectIdGenerator.Instance);
-                });
+                    // check if a class map for TEntity has already been registered
+                    if (!BsonClassMap.IsClassMapRegistered(typeof(TEntity)))
+                    {
+                        // Configure mapping from TEntity to BSON
+                        // In particular, enure that the Id property is properly mapped to the _id BSON field
+                        BsonClassMap.RegisterClassMap<TEntity>(cm =>
+                        {
+                            cm.AutoMap();
+                            cm.MapIdMember(c => c.Id)
+                              .SetSerializer(new StringSerializer(BsonType.ObjectId))
+                              .SetIdGenerator(StringObjectIdGenerator.Instance);
+                        });
+                    }
+                }
 
                 return _db.GetCollection<TEntity>(collectionName);
             }

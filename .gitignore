@@ -4,6 +4,10 @@ obj/
 appsettings*
 !appsettings.json
 
+# testing
+CoverageReport/
+CoverageResults/
+
 # general
 .DS_Store
 .vscode/

@@ -45,7 +45,7 @@ namespace UtttApi.ObjectModel.Models
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        private void CheckValidMove(Move move)
+        public void CheckValidMove(Move move)
         {
             // game is not in progress
             if (Status != GameStatus.IN_PROGRESS)
@@ -78,7 +78,7 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Switch the current player after a turn
         /// </summary>
-        private void SwitchCurrentPlayer()
+        public void SwitchCurrentPlayer()
         {
             if (CurrentPlayer == MarkType.PLAYER1)
             {
@@ -93,7 +93,7 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Check if the game has ended, and update status accordingly
         /// </summary>
-        private void UpdateGameStatus()
+        public void UpdateGameStatus()
         {
             if (Board.HasTicTacToe(MarkType.PLAYER1))
             {
