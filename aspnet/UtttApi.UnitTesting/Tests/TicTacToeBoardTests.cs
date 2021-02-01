@@ -50,7 +50,7 @@ namespace UtttApi.UnitTesting.Tests
         }
 
         [Fact]
-        public void TicTacTorBoard_Initializes9EmptyMarks()
+        public void TicTacToeBoard_Initializes9EmptyMarks()
         {
             Assert.Equal(9, ticTacToeBoard.Board.Length);
             foreach (var mark in ticTacToeBoard.Board)
