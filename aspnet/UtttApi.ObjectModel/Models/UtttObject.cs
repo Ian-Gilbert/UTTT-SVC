@@ -15,7 +15,7 @@ namespace UtttApi.ObjectModel.Models
         public MarkType CurrentPlayer { get; set; }
 
         private GlobalBoard _board = new GlobalBoard();
-        public GlobalBoard Board { get => _board; set => _board = value; }
+        public GlobalBoard GlobalBoard { get => _board; set => _board = value; }
         // public Player Player1 { get; set; }
         // public Player Player2 { get; set; }
 
@@ -30,10 +30,17 @@ namespace UtttApi.ObjectModel.Models
         /// <param name="move"></param>
         public void MakeMove(Move move)
         {
-            CheckValidMove(move); // throw exception if not valid move
-            Board.MakeMove(move);
-            UpdateGameStatus();
-            Board.UpdateFocus(move, Status);
+            string message;
+            if (!IsValidMove(move, out message))
+            {
+                throw new HttpResponseException(
+                    HttpStatusCode.BadRequest,
+                    message
+                );
+            }
+            GlobalBoard.MakeMove(move);
+            UpdateGameStatus(move.Mark);
+            GlobalBoard.UpdateFocus(move.MarkIndex, Status);
             if (Status == GameStatus.IN_PROGRESS)
             {
                 SwitchCurrentPlayer();
@@ -41,38 +48,36 @@ namespace UtttApi.ObjectModel.Models
         }
 
         /// <summary>
-        /// Check if a move is valid, if not throw HttpResponseException with 400 Bad Request status
+        /// Check if a move is valid. If not, return false with an appropriate error message
         /// </summary>
         /// <param name="move"></param>
-        /// <returns></returns>
-        public void CheckValidMove(Move move)
+        /// <param name="message"></param>
+        /// <returns></returns>//
+        public bool IsValidMove(Move move, out string message)
         {
             // game is not in progress
             if (Status != GameStatus.IN_PROGRESS)
             {
-                throw new HttpResponseException(
-                    HttpStatusCode.BadRequest,
-                    $"The game is finished @ id = {Id}"
-                );
+                message = $"The game is finished @ id = {Id}";
+                return false;
             }
 
             // not player's turn
             if (move.Mark != CurrentPlayer)
             {
-                throw new HttpResponseException(
-                    HttpStatusCode.BadRequest,
-                    $"It is not player {move.Mark.ToString("d")}'s turn @ id = {Id}"
-                );
+                message = $"It is not player {move.Mark.ToString("d")}'s turn @ id = {Id}";
+                return false;
             }
 
             // move has already been made or lb is not in focus
-            if (!Board.IsValidMove(move))
+            if (!GlobalBoard.IsValidMove(move))
             {
-                throw new HttpResponseException(
-                    HttpStatusCode.BadRequest,
-                    $"The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark.ToString("d")} @ id = {Id}"
-                );
+                message = $"The move ({move.LbIndex}, {move.MarkIndex}) is not valid for player {move.Mark.ToString("d")} @ id = {Id}";
+                return false;
             }
+
+            message = "valid move";
+            return true;
         }
 
         /// <summary>
@@ -93,17 +98,20 @@ namespace UtttApi.ObjectModel.Models
         /// <summary>
         /// Check if the game has ended, and update status accordingly
         /// </summary>
-        public void UpdateGameStatus()
+        public void UpdateGameStatus(MarkType player)
         {
-            if (Board.HasTicTacToe(MarkType.PLAYER1))
+            if (GlobalBoard.HasTicTacToe(player))
             {
-                Status = GameStatus.PLAYER1_WINS;
+                if (player == MarkType.PLAYER1)
+                {
+                    Status = GameStatus.PLAYER1_WINS;
+                }
+                else if (player == MarkType.PLAYER2)
+                {
+                    Status = GameStatus.PLAYER2_WINS;
+                }
             }
-            else if (Board.HasTicTacToe(MarkType.PLAYER2))
-            {
-                Status = GameStatus.PLAYER2_WINS;
-            }
-            else if (Board.IsFull())
+            else if (GlobalBoard.IsFull())
             {
                 Status = GameStatus.DRAW;
             }

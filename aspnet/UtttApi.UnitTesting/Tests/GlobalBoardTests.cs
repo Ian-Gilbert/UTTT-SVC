@@ -38,28 +38,20 @@ namespace UtttApi.UnitTesting.Tests
         public void IsValidMove_ReturnsFalse_WhenLbIsNotInFocus()
         {
             gb.LocalBoards[move.LbIndex].Focus = false;
-
-            var result = gb.IsValidMove(move);
-
-            Assert.False(result);
+            Assert.False(gb.IsValidMove(move));
         }
 
         [Fact]
         public void IsValidMove_ReturnsFalse_WhenMarkIsNotEmpty()
         {
             gb.LocalBoards[move.LbIndex].Board[move.MarkIndex] = MarkType.DRAW;
-
-            var result = gb.IsValidMove(move);
-
-            Assert.False(result);
+            Assert.False(gb.IsValidMove(move));
         }
 
         [Fact]
         public void IsValidMove_ReturnsTrue_WhenMoveIsValid()
         {
-            var result = gb.IsValidMove(move);
-
-            Assert.True(result);
+            Assert.True(gb.IsValidMove(move));
         }
 
         [Fact]
@@ -99,7 +91,7 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void UpdateFocus_ShouldSetEverythingToFalse_WhenGameIsFinished()
         {
-            gb.UpdateFocus(move, GameStatus.DRAW);
+            gb.UpdateFocus(0, GameStatus.DRAW);
 
             foreach (var lb in gb.LocalBoards)
             {
@@ -113,7 +105,7 @@ namespace UtttApi.UnitTesting.Tests
         {
             var nextLb = gb.LocalBoards[move.MarkIndex];
 
-            gb.UpdateFocus(move, GameStatus.IN_PROGRESS);
+            gb.UpdateFocus(move.MarkIndex, GameStatus.IN_PROGRESS);
 
             foreach (var lb in gb.LocalBoards)
             {
@@ -134,7 +126,7 @@ namespace UtttApi.UnitTesting.Tests
             var nextLb = gb.LocalBoards[move.MarkIndex];
             nextLb.Playable = false;
 
-            gb.UpdateFocus(move, GameStatus.IN_PROGRESS);
+            gb.UpdateFocus(move.MarkIndex, GameStatus.IN_PROGRESS);
 
             foreach (var lb in gb.LocalBoards)
             {

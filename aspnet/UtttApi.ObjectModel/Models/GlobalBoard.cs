@@ -45,11 +45,11 @@ namespace UtttApi.ObjectModel.Models
             }
         }
 
-        public void UpdateFocus(Move move, GameStatus status)
+        public void UpdateFocus(int index, GameStatus status)
         {
             if (status == GameStatus.IN_PROGRESS)
             {
-                LocalBoard nextLb = LocalBoards[move.MarkIndex];
+                LocalBoard nextLb = LocalBoards[index];
 
                 // if nextLb is playable, set focus to true and all others to false
                 if (nextLb.Playable)
