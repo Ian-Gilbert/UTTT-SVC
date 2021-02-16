@@ -106,7 +106,7 @@ jobs:
           key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
       - name: sonar_scan
         run: |
-          dotnet sonarscanner begin -k:uttt-svc -o:ultimate-tic-tac-toe -s:$(pwd)/sonar.analysis.xml
+          dotnet sonarscanner begin -k:uttt-svc -o:ultimate-tic-tac-toe -d:sonar.login=${{ secrets.SONAR_TOKEN }} -s:$(pwd)/sonar.analysis.xml
           dotnet build
-          dotnet sonarscanner end
+          dotnet sonarscanner end -d:sonar.login=${{ secrets.SONAR_TOKEN }}
         working-directory: ${{ env.WORKING_DIRECTORY }}
