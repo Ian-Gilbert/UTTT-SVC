@@ -6,15 +6,10 @@ env:
   CACHE_KEY_PREFIX: aspnet-uttt
   WORKING_DIRECTORY: aspnet
 
-# on:
-#   pull_request:
-#     branches: 
-#       - main
-
 on:
-  push:
-    branches:
-      - temp
+  pull_request:
+    branches: 
+      - main
 
 jobs:
   restore:
