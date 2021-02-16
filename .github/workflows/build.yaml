@@ -6,10 +6,15 @@ env:
   CACHE_KEY_PREFIX: aspnet-uttt
   WORKING_DIRECTORY: aspnet
 
+# on:
+#   pull_request:
+#     branches: 
+#       - main
+
 on:
-  pull_request:
-    branches: 
-      - main
+  push:
+    branches:
+      - temp
 
 jobs:
   restore:
@@ -64,12 +69,12 @@ jobs:
           --results-directory ./test_coverage/
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: opencover_upload
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v2
         with:
           name: code_coverage
           path: ${{ env.WORKING_DIRECTORY }}/code_coverage
       - name: trx_upload
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v2
         with:
           name: test_coverage
           path: ${{ env.WORKING_DIRECTORY }}/test_coverage
@@ -88,12 +93,12 @@ jobs:
       - name: git_fetch
         run: git fetch --unshallow
       - name: opencover_download
-        uses: actions/download-artifact@v1.0.0
+        uses: actions/download-artifact@v2
         with:
           name: code_coverage
           path: ${{ env.WORKING_DIRECTORY }}/code_coverage
       - name: trx_download
-        uses: actions/download-artifact@v1.0.0
+        uses: actions/download-artifact@v2
         with:
           name: test_coverage
           path: ${{ env.WORKING_DIRECTORY }}/test_coverage
