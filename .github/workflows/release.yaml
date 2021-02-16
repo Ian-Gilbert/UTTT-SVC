@@ -78,11 +78,16 @@ jobs:
         uses: actions/checkout@v2
       - name: git_fetch
         run: git fetch --unshallow
-      - name: coverage_download
-        uses: actions/download-artifact@v2
+      - name: opencover_download
+        uses: actions/download-artifact@v1.0.0
         with:
           name: code_coverage
-          path: ${{ env.WORKING_DIRECTORY }}/CoverageResults
+          path: ${{ env.WORKING_DIRECTORY }}/code_coverage
+      - name: trx_download
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: test_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/test_coverage
       - name: sonar_install
         run: dotnet tool install --global dotnet-sonarscanner
       - name: dotnet_cache
