@@ -57,9 +57,11 @@ jobs:
       - name: dotnet_test
         run: |
           dotnet test \
-          --collect:"XPlat Code Coverage" \
-          -r:CoverageResults \
-          -l:trx \
+          -p:CollectCoverage=true \
+          -p:CoverletOutput=../code_coverage/ \
+          -p:CoverletOutputFormat=opencover \
+          --logger trx \
+          --results-directory ./test_coverage/
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: coverage_upload
         uses: actions/upload-artifact@v2
@@ -90,7 +92,7 @@ jobs:
           key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
       - name: sonar_scan
         run: |
-          dotnet sonarscanner begin -k:Ultimate-Tic-Tac-Toe_uttt-svc -o:ultimate-tic-tac-toe -d:sonar.host.url='https://sonarcloud.io'
+          dotnet sonarscanner begin -k:uttt-svc -o:ultimate-tic-tac-toe -s:$(pwd)/sonar.analysis.xml
           dotnet build
           dotnet sonarscanner end
         working-directory: ${{ env.WORKING_DIRECTORY }}
