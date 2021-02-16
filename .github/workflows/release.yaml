@@ -63,11 +63,16 @@ jobs:
           --logger trx \
           --results-directory ./test_coverage/
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      - name: coverage_upload
-        uses: actions/upload-artifact@v2
+      - name: opencover_upload
+        uses: actions/upload-artifact@v1.0.0
         with:
           name: code_coverage
-          path: ${{ env.WORKING_DIRECTORY }}/CoverageResults
+          path: ${{ env.WORKING_DIRECTORY }}/code_coverage
+      - name: trx_upload
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: test_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/test_coverage
   
   analyze:
     name: analyze_aspnet
