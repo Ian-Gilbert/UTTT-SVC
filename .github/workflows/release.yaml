@@ -1,0 +1,146 @@
+# test and deploy service on push to main
+
+name: release
+
+env:
+  CACHE_KEY_PREFIX: aspnet-uttt
+  WORKING_DIRECTORY: aspnet
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions_checkout
+        uses: actions/checkout@v2
+      - name: dotnet_cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
+      - name: dotnet_restore
+        run: dotnet restore
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+  build:
+    name: build_aspnet
+    needs: restore
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions_checkout
+        uses: actions/checkout@v2
+      - name: dotnet_cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
+      - name: dotnet_build
+        run: dotnet build
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: dotnet_publish
+        run: dotnet publish --configuration Release --output drop UtttApi.WebApi/*.csproj
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: drop_upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: drop
+          path: ${{ env.WORKING_DIRECTORY }}/drop
+  
+  test:
+    name: test_aspnet
+    needs: restore
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions_checkout
+        uses: actions/checkout@v2
+      - name: dotnet_cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
+      - name: dotnet_test
+        run: |
+          dotnet test \
+          -p:CollectCoverage=true \
+          -p:CoverletOutput=../code_coverage/ \
+          -p:CoverletOutputFormat=opencover \
+          --logger trx \
+          --results-directory ./test_coverage/
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: opencover_upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: code_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/code_coverage
+      - name: trx_upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: test_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/test_coverage
+  
+  analyze:
+    name: analyze_aspnet
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: actions_checkout
+        uses: actions/checkout@v2
+      - name: git_fetch
+        run: git fetch --unshallow
+      - name: opencover_download
+        uses: actions/download-artifact@v2
+        with:
+          name: code_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/code_coverage
+      - name: trx_download
+        uses: actions/download-artifact@v2
+        with:
+          name: test_coverage
+          path: ${{ env.WORKING_DIRECTORY }}/test_coverage
+      - name: sonar_install
+        run: dotnet tool install --global dotnet-sonarscanner
+      - name: dotnet_cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('**/packages.lock.json') }}
+      - name: sonar_scan
+        run: |
+          dotnet sonarscanner begin -k:uttt-svc -o:ultimate-tic-tac-toe -d:sonar.login=${{ secrets.SONAR_TOKEN }} -s:$(pwd)/sonar.analysis.xml
+          dotnet build
+          dotnet sonarscanner end -d:sonar.login=${{ secrets.SONAR_TOKEN }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+  
+  pack:
+    env:
+      DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+    name: pack_aspnet
+    needs: [analyze]
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions_checkout
+        uses: actions/checkout@v2
+      - name: drop_download
+        uses: actions/download-artifact@v2
+        with:
+          name: drop
+          path: ${{ env.WORKING_DIRECTORY }}/drop
+      - name: docker_login
+        run: echo ${DOCKER_TOKEN} | docker login --username ${DOCKER_LOGIN} --password-stdin
+      - name: docker_build
+        run: docker image build --file .docker/aspnet.dockerfile --tag uttt-svc ${{ env.WORKING_DIRECTORY }}/drop
+      - name: docker_push
+        run: |
+          docker image tag uttt-svc uttt/uttt-svc:latest
+          docker image push uttt/uttt-svc:latest
+      - name: docker_logout
+        run: docker logout

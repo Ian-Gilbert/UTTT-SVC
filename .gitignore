@@ -7,6 +7,8 @@ appsettings*
 # testing
 CoverageReport/
 CoverageResults/
+test_coverage/
+code_coverage/
 
 # general
 .DS_Store
