@@ -83,6 +83,8 @@ jobs:
           path: ${{ env.WORKING_DIRECTORY }}/test_coverage
   
   analyze:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: analyze_aspnet
     needs: [build, test]
     runs-on: ubuntu-latest
