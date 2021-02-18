@@ -135,11 +135,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: drop
-          path: ${{ env.WORKING_DIRECTORY }}/drop
       - name: docker_login
         run: echo ${DOCKER_TOKEN} | docker login --username ${DOCKER_LOGIN} --password-stdin
       - name: docker_build
-        run: docker image build --file .docker/aspnet.dockerfile --tag uttt-svc ${{ env.WORKING_DIRECTORY }}/drop
+        run: docker image build --file .docker/aspnet.dockerfile --tag uttt-svc drop
       - name: docker_push
         run: |
           docker image tag uttt-svc uttt/uttt-svc:latest
