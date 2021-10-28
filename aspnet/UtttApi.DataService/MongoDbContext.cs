@@ -22,8 +22,8 @@ namespace UtttApi.DataService
         /// <param name="settings"></param>
         public MongoDbContext(IMongoDbSettings settings)
         {
-            var mongoClient = new MongoClient(settings.ConnectionString);
-            _db = mongoClient.GetDatabase(settings.DatabaseName);
+            var mongoClient = new MongoClient(settings.MongoUri);
+            _db = mongoClient.GetDatabase(settings.UtttDb);
         }
 
         /// <summary>

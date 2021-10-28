@@ -2,8 +2,8 @@ namespace UtttApi.DataService.Settings
 {
     public class MongoDbSettings : IMongoDbSettings
     {
-        public string GamesCollectionName { get; set; }
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
+        public string MongoUri { get; set; }
+        public string UtttCollection { get; set; }
+        public string UtttDb { get; set; }
     }
 }

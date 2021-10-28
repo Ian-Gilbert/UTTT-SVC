@@ -14,9 +14,9 @@ namespace UtttApi.UnitTesting.Tests
         {
             settings = new MongoDbSettings()
             {
-                ConnectionString = "mongodb://test123",
-                DatabaseName = "Test",
-                GamesCollectionName = "TestCollection"
+                MongoUri = "mongodb://test123",
+                UtttCollection = "TestCollection",
+                UtttDb = "Test",
             };
             context = new MongoDbContext(settings);
         }
@@ -33,9 +33,9 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void GetCollection_ReturnsCollection_WhenNameIsNotEmpty()
         {
-            var collection = context.GetCollection<UtttObject>(settings.GamesCollectionName);
+            var collection = context.GetCollection<UtttObject>(settings.UtttCollection);
             Assert.NotNull(collection);
-            Assert.Equal(settings.GamesCollectionName, collection.CollectionNamespace.CollectionName);
+            Assert.Equal(settings.UtttCollection, collection.CollectionNamespace.CollectionName);
         }
     }
 }

@@ -16,15 +16,15 @@ namespace UtttApi.UnitTesting.Tests
         {
             settings = new MongoDbSettings()
             {
-                ConnectionString = "mongodb://test123",
-                DatabaseName = "Test",
-                GamesCollectionName = "TestCollection"
+                MongoUri = "mongodb://test123",
+                UtttCollection = "TestCollection",
+                UtttDb = "Test",
             };
 
             var mockDb = new Mock<IMongoDatabase>();
             var mockClient = new Mock<IMongoClient>();
             mockClient.Setup(c => c.GetDatabase(
-                settings.DatabaseName,
+                settings.UtttDb,
                 It.IsAny<MongoDatabaseSettings>()
             )).Returns(mockDb.Object);
 
