@@ -11,14 +11,14 @@ namespace UtttApi.DataContext.Services
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        public IMongoRepository<UtttObject> Game { get; }
+        public UtttRepository Game { get; }
 
         public UnitOfWork(IMongoDbSettings settings)
         {
             var client = new MongoClient(settings.MongoUri);
             var utttDb = client.GetDatabase(settings.UtttDb);
 
-            Game = new MongoRepository<UtttObject>(utttDb.GetCollection<UtttObject>(settings.UtttCollection));
+            Game = new UtttRepository(utttDb.GetCollection<UtttObject>(settings.UtttCollection));
         }
     }
 }

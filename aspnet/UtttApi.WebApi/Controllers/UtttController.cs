@@ -60,7 +60,7 @@ namespace UtttApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(string id, Move move)
         {
-            UtttObject game = await _unitOfWork.Game.FindAsync(id);
+            var game = await _unitOfWork.Game.FindAsync(id);
             game.MakeMove(move);
             await _unitOfWork.Game.UpdateAsync(game);
             return Accepted(game);

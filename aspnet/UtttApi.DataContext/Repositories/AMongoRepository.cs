@@ -1,12 +1,11 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using UtttApi.ObjectModel.Exceptions;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using UtttApi.ObjectModel.Abstracts;
-using UtttApi.DataContext.Interfaces;
+using UtttApi.ObjectModel.Exceptions;
 
 namespace UtttApi.DataContext.Repositories
 {
@@ -16,7 +15,7 @@ namespace UtttApi.DataContext.Repositories
     /// All methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : AEntity
+    public abstract class AMongoRepository<TEntity> where TEntity : AEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -25,7 +24,7 @@ namespace UtttApi.DataContext.Repositories
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public MongoRepository(IMongoCollection<TEntity> collection)
+        public AMongoRepository(IMongoCollection<TEntity> collection)
         {
             _collection = collection;
         }

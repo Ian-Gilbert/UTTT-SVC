@@ -21,14 +21,14 @@ namespace UtttApi.UnitTesting.Tests
             var id = "test123";
             uttt = new UtttObject() { Id = id };
 
-            var mockMongoRepository = new Mock<IMongoRepository<UtttObject>>();
-            mockMongoRepository.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
-            mockMongoRepository.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
-            mockMongoRepository.Setup(s => s.UpdateAsync(uttt));
-            mockMongoRepository.Setup(s => s.DeleteAsync(id, default));
+            var mockUtttRepository = new Mock<UtttRepository>(new Mock<IMongoCollection<UtttObject>>().Object);
+            mockUtttRepository.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
+            mockUtttRepository.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
+            mockUtttRepository.Setup(s => s.UpdateAsync(uttt));
+            mockUtttRepository.Setup(s => s.DeleteAsync(id, default));
 
             mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork.Setup(u => u.Game).Returns(mockMongoRepository.Object);
+            mockUnitOfWork.Setup(u => u.Game).Returns(mockUtttRepository.Object);
 
             controller = new UtttController(mockUnitOfWork.Object);
         }

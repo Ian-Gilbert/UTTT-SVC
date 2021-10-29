@@ -16,7 +16,7 @@ namespace UtttApi.UnitTesting.Tests
 
         private Mock<IAsyncCursor<Entity>> entityCursor;
         private readonly Mock<IMongoCollection<Entity>> mockCollection;
-        private readonly MongoRepository<Entity> repo;
+        private readonly Mock<AMongoRepository<Entity>> repo;
 
         // list of invalid 24 digit hex strings
         public static IEnumerable<object[]> InvalidIds =>
@@ -43,14 +43,14 @@ namespace UtttApi.UnitTesting.Tests
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            repo = new MongoRepository<Entity>(mockCollection.Object);
+            repo = new Mock<AMongoRepository<Entity>>(mockCollection.Object) { CallBase = true };
         }
 
         [Theory]
         [MemberData(nameof(InvalidIds))]
         public void CheckParseId_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = Assert.Throws<HttpResponseException>(() => repo.CheckParseId(id));
+            var result = Assert.Throws<HttpResponseException>(() => repo.Object.CheckParseId(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -58,7 +58,7 @@ namespace UtttApi.UnitTesting.Tests
         [MemberData(nameof(InvalidIds))]
         public async void FindAsync_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.FindAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.Object.FindAsync(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -74,7 +74,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(entityCursor.Object);
 
             var id = "123456789012345678901234";
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.FindAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.Object.FindAsync(id));
             Assert.Equal(404, (int)result.StatusCode);
 
             mockCollection.Verify(c => c.FindAsync(
@@ -97,7 +97,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(entityCursor.Object);
 
-            var result = await repo.FindAsync(entity.Id);
+            var result = await repo.Object.FindAsync(entity.Id);
             Assert.NotNull(result);
             Assert.Equal(entity.Id, result.Id);
 
@@ -122,7 +122,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(entityCursor.Object);
 
-            var result = await repo.FindAllAsync();
+            var result = await repo.Object.FindAllAsync();
             Assert.NotEmpty(result);
 
             mockCollection.Verify(c => c.FindAsync(
@@ -143,7 +143,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             ));
 
-            var result = await repo.CreateAsync(entity);
+            var result = await repo.Object.CreateAsync(entity);
             Assert.Equal(entity.Id, result.Id);
 
             mockCollection.Verify(c => c.InsertOneAsync(
@@ -164,7 +164,7 @@ namespace UtttApi.UnitTesting.Tests
             ));
 
             var entity = new Entity() { Id = "1234567890ab1234567890ab" };
-            await repo.UpdateAsync(entity);
+            await repo.Object.UpdateAsync(entity);
 
             mockCollection.Verify(c => c.ReplaceOneAsync(
                 It.IsAny<FilterDefinition<Entity>>(),
@@ -178,7 +178,7 @@ namespace UtttApi.UnitTesting.Tests
         [MemberData(nameof(InvalidIds))]
         public async void DeleteAsync_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.DeleteAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.Object.DeleteAsync(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -194,7 +194,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(mockDeletedResult.Object);
 
             var id = "1234567890ab1234567890ab";
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.DeleteAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.Object.DeleteAsync(id));
             Assert.Equal(404, (int)result.StatusCode);
 
 
@@ -216,7 +216,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(mockDeletedResult.Object);
 
             var id = "1234567890ab1234567890ab";
-            await repo.DeleteAsync(id);
+            await repo.Object.DeleteAsync(id);
 
             mockCollection.Verify(c => c.DeleteOneAsync(
                 It.IsAny<FilterDefinition<Entity>>(),

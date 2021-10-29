@@ -5,6 +5,6 @@ namespace UtttApi.DataContext.Interfaces
 {
     public interface IUnitOfWork
     {
-        IMongoRepository<UtttObject> Game { get; }
+        UtttRepository Game { get; }
     }
 }

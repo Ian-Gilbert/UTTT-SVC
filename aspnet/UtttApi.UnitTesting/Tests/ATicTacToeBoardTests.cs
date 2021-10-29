@@ -46,10 +46,7 @@ namespace UtttApi.UnitTesting.Tests
         public ATicTacToeBoardTests()
         {
             move = new Move() { Mark = MarkType.PLAYER1, LbIndex = 0, MarkIndex = 0 };
-            ticTacToeBoard = new Mock<ATicTacToeBoard>()
-            {
-                CallBase = true
-            };
+            ticTacToeBoard = new Mock<ATicTacToeBoard>() { CallBase = true };
         }
 
         [Fact]
