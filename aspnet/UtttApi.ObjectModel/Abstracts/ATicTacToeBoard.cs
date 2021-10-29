@@ -8,7 +8,7 @@ namespace UtttApi.ObjectModel.Abstracts
         private MarkType[] _board = new MarkType[9];
         public MarkType[] Board { get => _board; set => _board = value; }
 
-        public ATicTacToeBoard()
+        protected ATicTacToeBoard()
         {
             for (int i = 0; i < 9; i++)
             {
