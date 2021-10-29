@@ -1,8 +1,9 @@
+using UtttApi.ObjectModel.Abstracts;
 using UtttApi.ObjectModel.Enums;
 
 namespace UtttApi.ObjectModel.Models
 {
-    public class GlobalBoard : TicTacToeBoard
+    public class GlobalBoard : ATicTacToeBoard
     {
         private LocalBoard[] _localBoards = new LocalBoard[9];
         public LocalBoard[] LocalBoards { get => _localBoards; set => _localBoards = value; }

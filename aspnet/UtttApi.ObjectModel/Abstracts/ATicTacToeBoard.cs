@@ -1,14 +1,14 @@
 using UtttApi.ObjectModel.Enums;
-using UtttApi.ObjectModel.Interfaces;
+using UtttApi.ObjectModel.Models;
 
-namespace UtttApi.ObjectModel.Models
+namespace UtttApi.ObjectModel.Abstracts
 {
-    public class TicTacToeBoard : ITicTacToeBoard
+    public abstract class ATicTacToeBoard
     {
         private MarkType[] _board = new MarkType[9];
         public MarkType[] Board { get => _board; set => _board = value; }
 
-        public TicTacToeBoard()
+        public ATicTacToeBoard()
         {
             for (int i = 0; i < 9; i++)
             {

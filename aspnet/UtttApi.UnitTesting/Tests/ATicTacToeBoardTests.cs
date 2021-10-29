@@ -1,16 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
+using Moq;
+using UtttApi.ObjectModel.Abstracts;
 using UtttApi.ObjectModel.Enums;
-using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Models;
 using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
 {
-    public class TicTacToeBoardTests
+    public class ATicTacToeBoardTests
     {
         private readonly Move move;
-        private readonly ITicTacToeBoard ticTacToeBoard;
+        private readonly Mock<ATicTacToeBoard> ticTacToeBoard;
 
         public static IEnumerable<object[]> threeInARows =>
                 new List<object[]>()
@@ -43,17 +43,20 @@ namespace UtttApi.UnitTesting.Tests
             }
         }
 
-        public TicTacToeBoardTests()
+        public ATicTacToeBoardTests()
         {
             move = new Move() { Mark = MarkType.PLAYER1, LbIndex = 0, MarkIndex = 0 };
-            ticTacToeBoard = new TicTacToeBoard();
+            ticTacToeBoard = new Mock<ATicTacToeBoard>()
+            {
+                CallBase = true
+            };
         }
 
         [Fact]
         public void TicTacToeBoard_Initializes9EmptyMarks()
         {
-            Assert.Equal(9, ticTacToeBoard.Board.Length);
-            foreach (var mark in ticTacToeBoard.Board)
+            Assert.Equal(9, ticTacToeBoard.Object.Board.Length);
+            foreach (var mark in ticTacToeBoard.Object.Board)
             {
                 Assert.Equal(MarkType.EMPTY, mark);
             }
@@ -62,7 +65,7 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void HasTicTacToe_ReturnsFalse_WhenThereIsNoThreeInARow()
         {
-            var result = ticTacToeBoard.HasTicTacToe(move.Mark);
+            var result = ticTacToeBoard.Object.HasTicTacToe(move.Mark);
             Assert.False(result);
         }
 
@@ -72,10 +75,10 @@ namespace UtttApi.UnitTesting.Tests
         {
             foreach (var mark in marks)
             {
-                ticTacToeBoard.Board[mark] = move.Mark;
+                ticTacToeBoard.Object.Board[mark] = move.Mark;
             }
 
-            var result = ticTacToeBoard.HasTicTacToe(move.Mark);
+            var result = ticTacToeBoard.Object.HasTicTacToe(move.Mark);
 
             Assert.True(result);
         }
@@ -86,11 +89,11 @@ namespace UtttApi.UnitTesting.Tests
         {
             for (int i = 0; i < 9; i++)
             {
-                ticTacToeBoard.Board[i] = MarkType.PLAYER1;
+                ticTacToeBoard.Object.Board[i] = MarkType.PLAYER1;
             }
-            ticTacToeBoard.Board[index] = MarkType.EMPTY;
+            ticTacToeBoard.Object.Board[index] = MarkType.EMPTY;
 
-            var result = ticTacToeBoard.IsFull();
+            var result = ticTacToeBoard.Object.IsFull();
 
             Assert.False(result);
         }
@@ -100,10 +103,10 @@ namespace UtttApi.UnitTesting.Tests
         {
             for (int i = 0; i < 9; i++)
             {
-                ticTacToeBoard.Board[i] = MarkType.PLAYER1;
+                ticTacToeBoard.Object.Board[i] = MarkType.PLAYER1;
             }
 
-            var result = ticTacToeBoard.IsFull();
+            var result = ticTacToeBoard.Object.IsFull();
 
             Assert.True(result);
         }
@@ -111,9 +114,9 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public void MarkBoard_MarksBoard() // wait, that's what the method does???
         {
-            ticTacToeBoard.MarkBoard(move);
+            ticTacToeBoard.Object.MarkBoard(move);
 
-            Assert.Equal(move.Mark, ticTacToeBoard.Board[move.MarkIndex]);
+            Assert.Equal(move.Mark, ticTacToeBoard.Object.Board[move.MarkIndex]);
         }
     }
 }
