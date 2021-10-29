@@ -1,4 +1,4 @@
-namespace UtttApi.DataService.Settings
+namespace UtttApi.DataContext.Settings
 {
     public class MongoDbSettings : IMongoDbSettings
     {

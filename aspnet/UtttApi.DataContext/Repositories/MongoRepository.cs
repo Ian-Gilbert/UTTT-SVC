@@ -6,12 +6,12 @@ using MongoDB.Driver;
 using UtttApi.ObjectModel.Exceptions;
 using System.Threading;
 using UtttApi.ObjectModel.Abstracts;
-using UtttApi.DataService.Interfaces;
+using UtttApi.DataContext.Interfaces;
 
-namespace UtttApi.DataService.Repositories
+namespace UtttApi.DataContext.Repositories
 {
     /// <summary>
-    /// A generic service to provide CRUD methods for storing data in a mongo database.
+    /// A generic repository to provide CRUD methods for storing data in a mongo database.
     /// TEntity must implement IEntity.
     /// All methods are virtual.
     /// </summary>

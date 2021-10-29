@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Moq;
-using UtttApi.DataService.Interfaces;
-using UtttApi.DataService.Repositories;
+using UtttApi.DataContext.Interfaces;
+using UtttApi.DataContext.Repositories;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Models;
 using UtttApi.WebApi.Controllers;

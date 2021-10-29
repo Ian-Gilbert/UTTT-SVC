@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UtttApi.ObjectModel.Abstracts;
 
-namespace UtttApi.DataService.Interfaces
+namespace UtttApi.DataContext.Interfaces
 {
     public interface IMongoRepository<TEntity> where TEntity : AEntity
     {

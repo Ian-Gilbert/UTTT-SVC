@@ -3,20 +3,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Moq;
-using UtttApi.DataService.Interfaces;
-using UtttApi.DataService.Repositories;
-using UtttApi.DataService.Services;
+using UtttApi.DataContext.Repositories;
+using UtttApi.ObjectModel.Abstracts;
 using UtttApi.ObjectModel.Exceptions;
-using UtttApi.ObjectModel.Models;
 using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
 {
     public class MongoRepositoryTests
     {
-        private Mock<IAsyncCursor<UtttObject>> utttObjectCursor;
-        private readonly Mock<IMongoCollection<UtttObject>> mockCollection;
-        private readonly MongoRepository<UtttObject> repo;
+        public class Entity : AEntity { }
+
+        private Mock<IAsyncCursor<Entity>> entityCursor;
+        private readonly Mock<IMongoCollection<Entity>> mockCollection;
+        private readonly MongoRepository<Entity> repo;
 
         // list of invalid 24 digit hex strings
         public static IEnumerable<object[]> InvalidIds =>
@@ -31,19 +31,19 @@ namespace UtttApi.UnitTesting.Tests
 
         public MongoRepositoryTests()
         {
-            mockCollection = new Mock<IMongoCollection<UtttObject>>();
+            mockCollection = new Mock<IMongoCollection<Entity>>();
 
-            utttObjectCursor = new Mock<IAsyncCursor<UtttObject>>();
-            utttObjectCursor
+            entityCursor = new Mock<IAsyncCursor<Entity>>();
+            entityCursor
                 .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
                 .Returns(true)
                 .Returns(false);
-            utttObjectCursor
+            entityCursor
                 .SetupSequence(_ => _.MoveNextAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            repo = new MongoRepository<UtttObject>(mockCollection.Object);
+            repo = new MongoRepository<Entity>(mockCollection.Object);
         }
 
         [Theory]
@@ -65,21 +65,21 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public async void FindAsync_ThrowsException_WhenDocumentDoesNotExist()
         {
-            utttObjectCursor.Setup(_ => _.Current).Returns(new List<UtttObject>());
+            entityCursor.Setup(_ => _.Current).Returns(new List<Entity>());
 
-            mockCollection.Setup(c => c.FindAsync<UtttObject>(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject, UtttObject>>(),
+            mockCollection.Setup(c => c.FindAsync<Entity>(
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity, Entity>>(),
                 It.IsAny<CancellationToken>()
-            )).ReturnsAsync(utttObjectCursor.Object);
+            )).ReturnsAsync(entityCursor.Object);
 
             var id = "123456789012345678901234";
             var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.FindAsync(id));
             Assert.Equal(404, (int)result.StatusCode);
 
             mockCollection.Verify(c => c.FindAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity>>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
         }
@@ -87,23 +87,23 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public async void FindAsync_ReturnsSingleDocument_WhenGivenValidId()
         {
-            var utttObject = new UtttObject() { Id = "1234567890ab1234567890ab" };
+            var entity = new Entity() { Id = "1234567890ab1234567890ab" };
 
-            utttObjectCursor.Setup(_ => _.Current).Returns(new List<UtttObject>() { utttObject });
+            entityCursor.Setup(_ => _.Current).Returns(new List<Entity>() { entity });
 
-            mockCollection.Setup(c => c.FindAsync<UtttObject>(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject, UtttObject>>(),
+            mockCollection.Setup(c => c.FindAsync<Entity>(
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity, Entity>>(),
                 It.IsAny<CancellationToken>()
-            )).ReturnsAsync(utttObjectCursor.Object);
+            )).ReturnsAsync(entityCursor.Object);
 
-            var result = await repo.FindAsync(utttObject.Id);
+            var result = await repo.FindAsync(entity.Id);
             Assert.NotNull(result);
-            Assert.Equal(utttObject.Id, result.Id);
+            Assert.Equal(entity.Id, result.Id);
 
             mockCollection.Verify(c => c.FindAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity>>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
         }
@@ -111,23 +111,23 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public async void FindAsync_ReturnsListOfDocuments_WhenGivenNoParameters()
         {
-            var utttObject1 = new UtttObject() { Id = "1234567890ab1234567890ab" };
-            var utttObject2 = new UtttObject() { Id = "123456789012345678901234" };
+            var entity1 = new Entity() { Id = "1234567890ab1234567890ab" };
+            var entity2 = new Entity() { Id = "123456789012345678901234" };
 
-            utttObjectCursor.Setup(_ => _.Current).Returns(new List<UtttObject>() { utttObject1, utttObject2 });
+            entityCursor.Setup(_ => _.Current).Returns(new List<Entity>() { entity1, entity2 });
 
-            mockCollection.Setup(c => c.FindAsync<UtttObject>(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject, UtttObject>>(),
+            mockCollection.Setup(c => c.FindAsync<Entity>(
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity, Entity>>(),
                 It.IsAny<CancellationToken>()
-            )).ReturnsAsync(utttObjectCursor.Object);
+            )).ReturnsAsync(entityCursor.Object);
 
             var result = await repo.FindAllAsync();
             Assert.NotEmpty(result);
 
             mockCollection.Verify(c => c.FindAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<FindOptions<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<FindOptions<Entity>>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
         }
@@ -135,19 +135,19 @@ namespace UtttApi.UnitTesting.Tests
         [Fact]
         public async void CreateAsync_ReturnsDocument()
         {
-            var utttObject = new UtttObject() { Id = "1234567890ab1234567890ab" };
+            var entity = new Entity() { Id = "1234567890ab1234567890ab" };
 
             mockCollection.Setup(c => c.InsertOneAsync(
-                It.IsAny<UtttObject>(),
+                It.IsAny<Entity>(),
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()
             ));
 
-            var result = await repo.CreateAsync(utttObject);
-            Assert.Equal(utttObject.Id, result.Id);
+            var result = await repo.CreateAsync(entity);
+            Assert.Equal(entity.Id, result.Id);
 
             mockCollection.Verify(c => c.InsertOneAsync(
-                It.IsAny<UtttObject>(),
+                It.IsAny<Entity>(),
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
@@ -157,18 +157,18 @@ namespace UtttApi.UnitTesting.Tests
         public async void UpdateAsync_CallsReplaceOneAsync()
         {
             mockCollection.Setup(c => c.ReplaceOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<UtttObject>(),
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<Entity>(),
                 It.IsAny<ReplaceOptions>(),
                 It.IsAny<CancellationToken>()
             ));
 
-            var utttObject = new UtttObject() { Id = "1234567890ab1234567890ab" };
-            await repo.UpdateAsync(utttObject);
+            var entity = new Entity() { Id = "1234567890ab1234567890ab" };
+            await repo.UpdateAsync(entity);
 
             mockCollection.Verify(c => c.ReplaceOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
-                It.IsAny<UtttObject>(),
+                It.IsAny<FilterDefinition<Entity>>(),
+                It.IsAny<Entity>(),
                 It.IsAny<ReplaceOptions>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
@@ -189,7 +189,7 @@ namespace UtttApi.UnitTesting.Tests
             mockDeletedResult.SetupGet(d => d.DeletedCount).Returns(0L);
 
             mockCollection.Setup(c => c.DeleteOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(mockDeletedResult.Object);
 
@@ -199,7 +199,7 @@ namespace UtttApi.UnitTesting.Tests
 
 
             mockCollection.Verify(c => c.DeleteOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
         }
@@ -211,7 +211,7 @@ namespace UtttApi.UnitTesting.Tests
             mockDeletedResult.SetupGet(d => d.DeletedCount).Returns(1L);
 
             mockCollection.Setup(c => c.DeleteOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(mockDeletedResult.Object);
 
@@ -219,7 +219,7 @@ namespace UtttApi.UnitTesting.Tests
             await repo.DeleteAsync(id);
 
             mockCollection.Verify(c => c.DeleteOneAsync(
-                It.IsAny<FilterDefinition<UtttObject>>(),
+                It.IsAny<FilterDefinition<Entity>>(),
                 It.IsAny<CancellationToken>()
             ), Times.Once);
         }

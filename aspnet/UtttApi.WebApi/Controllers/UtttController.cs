@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UtttApi.DataService.Interfaces;
+using UtttApi.DataContext.Interfaces;
 using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.WebApi.Controllers

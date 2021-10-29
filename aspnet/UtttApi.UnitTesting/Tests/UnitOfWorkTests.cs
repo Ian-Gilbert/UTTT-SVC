@@ -1,8 +1,8 @@
 using MongoDB.Driver;
 using Moq;
-using UtttApi.DataService.Interfaces;
-using UtttApi.DataService.Services;
-using UtttApi.DataService.Settings;
+using UtttApi.DataContext.Interfaces;
+using UtttApi.DataContext.Services;
+using UtttApi.DataContext.Settings;
 using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
@@ -21,12 +21,12 @@ namespace UtttApi.UnitTesting.Tests
                 UtttDb = "Test",
             };
 
-            var mockDb = new Mock<IMongoDatabase>();
-            var mockClient = new Mock<IMongoClient>();
-            mockClient.Setup(c => c.GetDatabase(
-                settings.UtttDb,
-                It.IsAny<MongoDatabaseSettings>()
-            )).Returns(mockDb.Object);
+            // var mockDb = new Mock<IMongoDatabase>();
+            // var mockClient = new Mock<IMongoClient>();
+            // mockClient.Setup(c => c.GetDatabase(
+            //     settings.UtttDb,
+            //     It.IsAny<MongoDatabaseSettings>()
+            // )).Returns(mockDb.Object);
 
             unitOfWork = new UnitOfWork(settings);
         }

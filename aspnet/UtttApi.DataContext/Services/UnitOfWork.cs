@@ -1,13 +1,13 @@
 using MongoDB.Driver;
-using UtttApi.DataService.Interfaces;
-using UtttApi.DataService.Repositories;
-using UtttApi.DataService.Settings;
+using UtttApi.DataContext.Interfaces;
+using UtttApi.DataContext.Repositories;
+using UtttApi.DataContext.Settings;
 using UtttApi.ObjectModel.Models;
 
-namespace UtttApi.DataService.Services
+namespace UtttApi.DataContext.Services
 {
     /// <summary>
-    /// Contains all services and methods required to store data
+    /// Contains all repositories and services required to handle data
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {

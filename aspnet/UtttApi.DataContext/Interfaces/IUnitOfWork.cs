@@ -1,7 +1,7 @@
-using UtttApi.DataService.Repositories;
+using UtttApi.DataContext.Repositories;
 using UtttApi.ObjectModel.Models;
 
-namespace UtttApi.DataService.Interfaces
+namespace UtttApi.DataContext.Interfaces
 {
     public interface IUnitOfWork
     {

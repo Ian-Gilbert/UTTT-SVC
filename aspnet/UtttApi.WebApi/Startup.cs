@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using UtttApi.DataService.Services;
-using UtttApi.DataService.Settings;
-using UtttApi.DataService.Interfaces;
+using UtttApi.DataContext.Services;
+using UtttApi.DataContext.Settings;
+using UtttApi.DataContext.Interfaces;
 using UtttApi.WebApi.Filters;
 
 namespace UtttApi.WebApi
