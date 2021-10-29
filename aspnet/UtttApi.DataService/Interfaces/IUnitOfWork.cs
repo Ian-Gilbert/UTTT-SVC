@@ -1,9 +1,10 @@
+using UtttApi.DataService.Repositories;
 using UtttApi.ObjectModel.Models;
 
 namespace UtttApi.DataService.Interfaces
 {
     public interface IUnitOfWork
     {
-        IDataService<UtttObject> Game { get; }
+        IMongoRepository<UtttObject> Game { get; }
     }
 }

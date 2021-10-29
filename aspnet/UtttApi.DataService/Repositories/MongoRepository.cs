@@ -3,12 +3,12 @@ using System.Net;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using UtttApi.DataService.Interfaces;
 using UtttApi.ObjectModel.Exceptions;
 using System.Threading;
 using UtttApi.ObjectModel.Abstracts;
+using UtttApi.DataService.Interfaces;
 
-namespace UtttApi.DataService.Services
+namespace UtttApi.DataService.Repositories
 {
     /// <summary>
     /// A generic service to provide CRUD methods for storing data in a mongo database.
@@ -16,7 +16,7 @@ namespace UtttApi.DataService.Services
     /// All methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class DataService<TEntity> : IDataService<TEntity> where TEntity : AEntity
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : AEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -25,7 +25,7 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public DataService(IMongoCollection<TEntity> collection)
+        public MongoRepository(IMongoCollection<TEntity> collection)
         {
             _collection = collection;
         }

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Moq;
 using UtttApi.DataService.Interfaces;
+using UtttApi.DataService.Repositories;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Models;
 using UtttApi.WebApi.Controllers;
@@ -19,14 +21,14 @@ namespace UtttApi.UnitTesting.Tests
             var id = "test123";
             uttt = new UtttObject() { Id = id };
 
-            var mockDataService = new Mock<IDataService<UtttObject>>();
-            mockDataService.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
-            mockDataService.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
-            mockDataService.Setup(s => s.UpdateAsync(uttt));
-            mockDataService.Setup(s => s.DeleteAsync(id, default));
+            var mockMongoRepository = new Mock<IMongoRepository<UtttObject>>();
+            mockMongoRepository.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
+            mockMongoRepository.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
+            mockMongoRepository.Setup(s => s.UpdateAsync(uttt));
+            mockMongoRepository.Setup(s => s.DeleteAsync(id, default));
 
             mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork.Setup(u => u.Game).Returns(mockDataService.Object);
+            mockUnitOfWork.Setup(u => u.Game).Returns(mockMongoRepository.Object);
 
             controller = new UtttController(mockUnitOfWork.Object);
         }

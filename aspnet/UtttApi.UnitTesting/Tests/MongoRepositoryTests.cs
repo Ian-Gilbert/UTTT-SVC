@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Moq;
 using UtttApi.DataService.Interfaces;
+using UtttApi.DataService.Repositories;
 using UtttApi.DataService.Services;
 using UtttApi.ObjectModel.Exceptions;
 using UtttApi.ObjectModel.Models;
@@ -11,11 +12,11 @@ using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
 {
-    public class DataServiceTests
+    public class MongoRepositoryTests
     {
         private Mock<IAsyncCursor<UtttObject>> utttObjectCursor;
         private readonly Mock<IMongoCollection<UtttObject>> mockCollection;
-        private readonly IDataService<UtttObject> service;
+        private readonly MongoRepository<UtttObject> repo;
 
         // list of invalid 24 digit hex strings
         public static IEnumerable<object[]> InvalidIds =>
@@ -28,7 +29,7 @@ namespace UtttApi.UnitTesting.Tests
                 new object[] { "12345678901234567890123g" } // non-hex character
             };
 
-        public DataServiceTests()
+        public MongoRepositoryTests()
         {
             mockCollection = new Mock<IMongoCollection<UtttObject>>();
 
@@ -42,14 +43,14 @@ namespace UtttApi.UnitTesting.Tests
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            service = new DataService<UtttObject>(mockCollection.Object);
+            repo = new MongoRepository<UtttObject>(mockCollection.Object);
         }
 
         [Theory]
         [MemberData(nameof(InvalidIds))]
         public void CheckParseId_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = Assert.Throws<HttpResponseException>(() => service.CheckParseId(id));
+            var result = Assert.Throws<HttpResponseException>(() => repo.CheckParseId(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -57,7 +58,7 @@ namespace UtttApi.UnitTesting.Tests
         [MemberData(nameof(InvalidIds))]
         public async void FindAsync_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => service.FindAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.FindAsync(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -73,7 +74,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(utttObjectCursor.Object);
 
             var id = "123456789012345678901234";
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => service.FindAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.FindAsync(id));
             Assert.Equal(404, (int)result.StatusCode);
 
             mockCollection.Verify(c => c.FindAsync(
@@ -96,7 +97,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(utttObjectCursor.Object);
 
-            var result = await service.FindAsync(utttObject.Id);
+            var result = await repo.FindAsync(utttObject.Id);
             Assert.NotNull(result);
             Assert.Equal(utttObject.Id, result.Id);
 
@@ -121,7 +122,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(utttObjectCursor.Object);
 
-            var result = await service.FindAllAsync();
+            var result = await repo.FindAllAsync();
             Assert.NotEmpty(result);
 
             mockCollection.Verify(c => c.FindAsync(
@@ -142,7 +143,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             ));
 
-            var result = await service.CreateAsync(utttObject);
+            var result = await repo.CreateAsync(utttObject);
             Assert.Equal(utttObject.Id, result.Id);
 
             mockCollection.Verify(c => c.InsertOneAsync(
@@ -163,7 +164,7 @@ namespace UtttApi.UnitTesting.Tests
             ));
 
             var utttObject = new UtttObject() { Id = "1234567890ab1234567890ab" };
-            await service.UpdateAsync(utttObject);
+            await repo.UpdateAsync(utttObject);
 
             mockCollection.Verify(c => c.ReplaceOneAsync(
                 It.IsAny<FilterDefinition<UtttObject>>(),
@@ -177,7 +178,7 @@ namespace UtttApi.UnitTesting.Tests
         [MemberData(nameof(InvalidIds))]
         public async void DeleteAsync_ThrowsException_WhenIdIsNotValid(string id)
         {
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => service.DeleteAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.DeleteAsync(id));
             Assert.Equal(400, (int)result.StatusCode);
         }
 
@@ -193,7 +194,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(mockDeletedResult.Object);
 
             var id = "1234567890ab1234567890ab";
-            var result = await Assert.ThrowsAsync<HttpResponseException>(() => service.DeleteAsync(id));
+            var result = await Assert.ThrowsAsync<HttpResponseException>(() => repo.DeleteAsync(id));
             Assert.Equal(404, (int)result.StatusCode);
 
 
@@ -215,7 +216,7 @@ namespace UtttApi.UnitTesting.Tests
             )).ReturnsAsync(mockDeletedResult.Object);
 
             var id = "1234567890ab1234567890ab";
-            await service.DeleteAsync(id);
+            await repo.DeleteAsync(id);
 
             mockCollection.Verify(c => c.DeleteOneAsync(
                 It.IsAny<FilterDefinition<UtttObject>>(),
