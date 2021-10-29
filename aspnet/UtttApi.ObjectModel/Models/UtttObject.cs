@@ -14,14 +14,14 @@ namespace UtttApi.ObjectModel.Models
     {
         public GameStatus Status { get; set; }
         public MarkType CurrentPlayer { get; set; }
+        public GlobalBoard GlobalBoard { get; set; }
 
-        private GlobalBoard _board = new GlobalBoard();
-        public GlobalBoard GlobalBoard { get => _board; set => _board = value; }
         // public Player Player1 { get; set; }
         // public Player Player2 { get; set; }
 
         public UtttObject()
         {
+            GlobalBoard = new GlobalBoard();
             CurrentPlayer = MarkType.PLAYER1;
         }
 

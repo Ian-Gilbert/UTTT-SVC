@@ -5,14 +5,14 @@ namespace UtttApi.ObjectModel.Models
 {
     public class GlobalBoard : ATicTacToeBoard
     {
-        private LocalBoard[] _localBoards = new LocalBoard[9];
-        public LocalBoard[] LocalBoards { get => _localBoards; set => _localBoards = value; }
+        public LocalBoard[] LocalBoards { get; set; }
 
         public GlobalBoard() : base()
         {
+            LocalBoards = new LocalBoard[9];
             for (int i = 0; i < 9; i++)
             {
-                _localBoards[i] = new LocalBoard();
+                LocalBoards[i] = new LocalBoard();
             }
         }
 
