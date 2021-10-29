@@ -24,7 +24,7 @@ namespace UtttApi.DataContext.Repositories
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public AMongoRepository(IMongoCollection<TEntity> collection)
+        protected AMongoRepository(IMongoCollection<TEntity> collection)
         {
             _collection = collection;
         }
