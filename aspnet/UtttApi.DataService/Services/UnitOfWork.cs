@@ -1,3 +1,4 @@
+using MongoDB.Driver;
 using UtttApi.DataService.Interfaces;
 using UtttApi.DataService.Settings;
 using UtttApi.ObjectModel.Models;
@@ -13,8 +14,10 @@ namespace UtttApi.DataService.Services
 
         public UnitOfWork(IMongoDbSettings settings)
         {
-            var context = new MongoDbContext(settings);
-            Game = new DataService<UtttObject>(context.GetCollection<UtttObject>(settings.UtttCollection));
+            var client = new MongoClient(settings.MongoUri);
+            var utttDb = client.GetDatabase(settings.UtttDb);
+
+            Game = new DataService<UtttObject>(utttDb.GetCollection<UtttObject>(settings.UtttCollection));
         }
     }
 }

@@ -121,7 +121,7 @@ namespace UtttApi.UnitTesting.Tests
                 It.IsAny<CancellationToken>()
             )).ReturnsAsync(utttObjectCursor.Object);
 
-            var result = await service.FindAsync();
+            var result = await service.FindAllAsync();
             Assert.NotEmpty(result);
 
             mockCollection.Verify(c => c.FindAsync(

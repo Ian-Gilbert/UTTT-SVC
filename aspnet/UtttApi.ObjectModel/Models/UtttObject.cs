@@ -1,16 +1,17 @@
 using System.Net;
-using UtttApi.ObjectModel.Interfaces;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Exceptions;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using UtttApi.ObjectModel.Abstracts;
 
 namespace UtttApi.ObjectModel.Models
 {
     /// <summary>
     /// Class to manage the overall game
     /// </summary>
-    public class UtttObject : IEntity
+    public class UtttObject : AEntity
     {
-        public string Id { get; set; }
         public GameStatus Status { get; set; }
         public MarkType CurrentPlayer { get; set; }
 

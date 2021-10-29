@@ -20,10 +20,10 @@ namespace UtttApi.UnitTesting.Tests
             uttt = new UtttObject() { Id = id };
 
             var mockDataService = new Mock<IDataService<UtttObject>>();
-            mockDataService.Setup(s => s.FindAsync(id)).ReturnsAsync(uttt);
+            mockDataService.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
             mockDataService.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
             mockDataService.Setup(s => s.UpdateAsync(uttt));
-            mockDataService.Setup(s => s.DeleteAsync(id));
+            mockDataService.Setup(s => s.DeleteAsync(id, default));
 
             mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(u => u.Game).Returns(mockDataService.Object);
@@ -39,7 +39,7 @@ namespace UtttApi.UnitTesting.Tests
 
             Assert.Equal(uttt.Id, resultObject.Id);
 
-            mockUnitOfWork.Verify(u => u.Game.FindAsync(uttt.Id), Times.Once);
+            mockUnitOfWork.Verify(u => u.Game.FindAsync(uttt.Id, default), Times.Once);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace UtttApi.UnitTesting.Tests
         {
             var result = Assert.IsType<NoContentResult>(await controller.Delete(uttt.Id));
 
-            mockUnitOfWork.Verify(u => u.Game.DeleteAsync(uttt.Id), Times.Once);
+            mockUnitOfWork.Verify(u => u.Game.DeleteAsync(uttt.Id, default), Times.Once);
         }
     }
 }
