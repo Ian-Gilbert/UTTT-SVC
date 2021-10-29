@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using UtttApi.DataContext.Services;
 using UtttApi.DataContext.Settings;
-using UtttApi.DataContext.Interfaces;
 using UtttApi.WebApi.Filters;
+using UtttApi.DataContext;
 
 namespace UtttApi.WebApi
 {
@@ -28,11 +26,7 @@ namespace UtttApi.WebApi
                 Configuration.GetSection(nameof(MongoDbSettings))
             );
 
-            services.AddSingleton<IMongoDbSettings>(sp =>
-                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
-            );
-
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.RegisterMongoDbServices();
 
             services.AddCors(options =>
             {

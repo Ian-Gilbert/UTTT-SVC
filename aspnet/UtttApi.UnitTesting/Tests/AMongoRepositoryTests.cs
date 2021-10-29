@@ -10,7 +10,7 @@ using Xunit;
 
 namespace UtttApi.UnitTesting.Tests
 {
-    public class MongoRepositoryTests
+    public class AMongoRepositoryTests
     {
         public class Entity : AEntity { }
 
@@ -29,7 +29,7 @@ namespace UtttApi.UnitTesting.Tests
                 new object[] { "12345678901234567890123g" } // non-hex character
             };
 
-        public MongoRepositoryTests()
+        public AMongoRepositoryTests()
         {
             mockCollection = new Mock<IMongoCollection<Entity>>();
 

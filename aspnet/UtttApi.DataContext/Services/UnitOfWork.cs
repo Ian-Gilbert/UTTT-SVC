@@ -13,11 +13,9 @@ namespace UtttApi.DataContext.Services
     {
         public UtttRepository Game { get; }
 
-        public UnitOfWork(IMongoDbSettings settings)
+        public UnitOfWork(IMongoClient client, IMongoDbSettings settings)
         {
-            var client = new MongoClient(settings.MongoUri);
             var utttDb = client.GetDatabase(settings.UtttDb);
-
             Game = new UtttRepository(utttDb.GetCollection<UtttObject>(settings.UtttCollection));
         }
     }

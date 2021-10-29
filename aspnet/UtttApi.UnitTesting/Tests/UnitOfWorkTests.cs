@@ -10,25 +10,24 @@ namespace UtttApi.UnitTesting.Tests
     public class UnitOfWorkTests
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IMongoDbSettings settings;
 
         public UnitOfWorkTests()
         {
-            settings = new MongoDbSettings()
+            var settings = new MongoDbSettings()
             {
                 MongoUri = "mongodb://test123",
                 UtttCollection = "TestCollection",
                 UtttDb = "Test",
             };
 
-            // var mockDb = new Mock<IMongoDatabase>();
-            // var mockClient = new Mock<IMongoClient>();
-            // mockClient.Setup(c => c.GetDatabase(
-            //     settings.UtttDb,
-            //     It.IsAny<MongoDatabaseSettings>()
-            // )).Returns(mockDb.Object);
+            var mockDb = new Mock<IMongoDatabase>();
+            var mockClient = new Mock<IMongoClient>();
+            mockClient.Setup(c => c.GetDatabase(
+                settings.UtttDb,
+                It.IsAny<MongoDatabaseSettings>()
+            )).Returns(mockDb.Object);
 
-            unitOfWork = new UnitOfWork(settings);
+            unitOfWork = new UnitOfWork(mockClient.Object, settings);
         }
 
         [Fact]
