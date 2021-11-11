@@ -1,6 +1,8 @@
+using UtttApi.ObjectModel.Abstracts;
+
 namespace UtttApi.ObjectModel.Models
 {
-    public class LocalBoard : TicTacToeBoard
+    public class LocalBoard : ATicTacToeBoard
     {
         // next move must be played on a board with focus == true
         public bool Focus { get; set; }

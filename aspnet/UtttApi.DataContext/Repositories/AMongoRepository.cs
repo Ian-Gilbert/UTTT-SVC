@@ -1,21 +1,21 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using UtttApi.DataService.Interfaces;
-using UtttApi.ObjectModel.Interfaces;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using UtttApi.ObjectModel.Abstracts;
 using UtttApi.ObjectModel.Exceptions;
 
-namespace UtttApi.DataService.Services
+namespace UtttApi.DataContext.Repositories
 {
     /// <summary>
-    /// A generic service to provide CRUD methods for storing data in a mongo database.
+    /// A generic repository to provide CRUD methods for storing data in a mongo database.
     /// TEntity must implement IEntity.
     /// All methods are virtual.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class DataService<TEntity> : IDataService<TEntity> where TEntity : IEntity
+    public abstract class AMongoRepository<TEntity> where TEntity : AEntity
     {
         protected readonly IMongoCollection<TEntity> _collection;
 
@@ -24,7 +24,7 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="CollectionName"></param>
-        public DataService(IMongoCollection<TEntity> collection)
+        protected AMongoRepository(IMongoCollection<TEntity> collection)
         {
             _collection = collection;
         }
@@ -46,10 +46,10 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(string id)
+        public virtual async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             CheckParseId(id);
-            var deletedResult = await _collection.DeleteOneAsync(d => d.Id == id);
+            var deletedResult = await _collection.DeleteOneAsync(d => d.Id == id, cancellationToken);
 
             if (deletedResult.DeletedCount == 0)
             {
@@ -73,10 +73,10 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<TEntity> FindAsync(string id)
+        public virtual async Task<TEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             CheckParseId(id);
-            var entity = await _collection.FindAsync<TEntity>(d => d.Id == id).Result.FirstOrDefaultAsync();
+            var entity = await _collection.Find<TEntity>(d => d.Id == id).FirstOrDefaultAsync(cancellationToken);
 
             if (entity is null)
             {
@@ -91,8 +91,8 @@ namespace UtttApi.DataService.Services
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TEntity>> FindAsync() =>
-            await _collection.FindAsync<TEntity>(d => true).Result.ToListAsync();
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default) =>
+            await _collection.Find<TEntity>(d => true).ToListAsync(cancellationToken);
 
         /// <summary>
         /// Update a document by replacing the whole document in db

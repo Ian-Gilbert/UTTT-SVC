@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Moq;
-using UtttApi.DataService.Interfaces;
+using UtttApi.DataContext.Interfaces;
+using UtttApi.DataContext.Repositories;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Models;
 using UtttApi.WebApi.Controllers;
@@ -19,14 +21,14 @@ namespace UtttApi.UnitTesting.Tests
             var id = "test123";
             uttt = new UtttObject() { Id = id };
 
-            var mockDataService = new Mock<IDataService<UtttObject>>();
-            mockDataService.Setup(s => s.FindAsync(id)).ReturnsAsync(uttt);
-            mockDataService.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
-            mockDataService.Setup(s => s.UpdateAsync(uttt));
-            mockDataService.Setup(s => s.DeleteAsync(id));
+            var mockUtttRepository = new Mock<UtttRepository>(new Mock<IMongoCollection<UtttObject>>().Object);
+            mockUtttRepository.Setup(s => s.FindAsync(id, default)).ReturnsAsync(uttt);
+            mockUtttRepository.Setup(s => s.CreateAsync(It.IsAny<UtttObject>())).ReturnsAsync(uttt);
+            mockUtttRepository.Setup(s => s.UpdateAsync(uttt));
+            mockUtttRepository.Setup(s => s.DeleteAsync(id, default));
 
             mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork.Setup(u => u.Game).Returns(mockDataService.Object);
+            mockUnitOfWork.Setup(u => u.Game).Returns(mockUtttRepository.Object);
 
             controller = new UtttController(mockUnitOfWork.Object);
         }
@@ -39,7 +41,7 @@ namespace UtttApi.UnitTesting.Tests
 
             Assert.Equal(uttt.Id, resultObject.Id);
 
-            mockUnitOfWork.Verify(u => u.Game.FindAsync(uttt.Id), Times.Once);
+            mockUnitOfWork.Verify(u => u.Game.FindAsync(uttt.Id, default), Times.Once);
         }
 
         [Fact]
@@ -74,7 +76,7 @@ namespace UtttApi.UnitTesting.Tests
         {
             var result = Assert.IsType<NoContentResult>(await controller.Delete(uttt.Id));
 
-            mockUnitOfWork.Verify(u => u.Game.DeleteAsync(uttt.Id), Times.Once);
+            mockUnitOfWork.Verify(u => u.Game.DeleteAsync(uttt.Id, default), Times.Once);
         }
     }
 }
