@@ -1,8 +1,6 @@
 using System.Net;
 using UtttApi.ObjectModel.Enums;
 using UtttApi.ObjectModel.Exceptions;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
 using UtttApi.ObjectModel.Abstracts;
 
 namespace UtttApi.ObjectModel.Models
