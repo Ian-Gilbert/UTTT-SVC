@@ -8,7 +8,7 @@ namespace UtttApi.WebApi.Filters
     {
         public int Order { get; } = int.MaxValue - 10;
 
-        public void OnActionExecuting(ActionExecutingContext context) { }
+        public void OnActionExecuting(ActionExecutingContext context) { /* No need to do anything before execution */ }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
